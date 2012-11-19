@@ -1,0 +1,31 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>KeyNote</title>
+    <!-- Bootstrap -->
+    <link href="{{url_for('static',filename='bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" media="screen">
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+          <h1>Simple bookmark and keynote</h1>
+        </div>
+        <div class="row">
+            <div class="span2">
+                <button type="button" class="btn btn-primary btn-large" onclick="location.href='/add_page'">Add</button>
+            </div>
+            <div class="span1"><h5>order by</h5></div>
+            <div class="btn-toolbar offset1">
+                <div class="btn-group">
+                    <button class="btn">title</button>
+                    <button class="btn">time</button>
+                    <button class="btn">tag</button>
+                    <button class="btn">random</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static',filename='jquery-1.8.3.min.js')}}"></script>
+</body>
+</html>

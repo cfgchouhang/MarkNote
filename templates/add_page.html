@@ -1,0 +1,34 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>KeyNote</title>
+    <!-- Bootstrap -->
+    <link href="{{url_for('static',filename='bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" media="screen">
+    <style>
+    #set{
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
+        text-align: center;
+        /* Negative indent footer by it's height */
+        margin: 0 auto -60px;
+    }
+    </style>
+</head>
+<body>
+    <div id="set" class="container">
+    <form action="/add_new" method="POST">
+        <fieldset>
+            <legend><h3>add new bookmark or keynote</h3></legend>
+            <input class="input-xlarge" type="text" placeholder="title" id="title" name="title"><br/>
+            <input class="input-xlarge" type="text" placeholder="the url" id="link" name="link"><br/>
+            <span class="help-block"><h4>use ',' or blank to seperate tags</h4></span>
+            <input class="input-xlarge" type="text" placeholder="tags" id="tag" name="tag"><br />
+            <textarea class="input-xlarge" placeholder="note can be omitted." rows="8" id="note" name="note"></textarea><br/>
+            <button type="submit" class="btn">Submit</button>
+        </fieldset>
+    </form>
+    <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static',filename='jquery-1.8.3.min.js')}}"></script>
+</body>
+</html>
