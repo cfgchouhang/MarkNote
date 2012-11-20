@@ -7,7 +7,7 @@ class sqltool:
 
     @staticmethod
     def init_eng():
-        engine = create_engine('mysql://cfg:19921031@localhost')
+        engine = create_engine('mysql://cfg:19921031@localhost/?charset=utf8')
         Base = declarative_base()
         return engine,Base
 
