@@ -1,0 +1,42 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>KeyNote</title>
+    <!-- Bootstrap -->
+    <link href="{{url_for('static',filename='bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" media="screen">
+    <style>
+    #set{
+        min-height: 100%;
+        height: auto !important;
+        height: 100%;
+        text-align: center;
+        /* Negative indent footer by it's height */
+        margin: 0 auto -60px;
+    }
+    </style>
+    <script>
+        function check_validity(){
+            document.editform.submit();
+        }
+    </script>
+</head>
+<body>
+    <div id="set" class="container">
+    <form id="editform" name="editform" action="/update/{{data.id}}" method="POST">
+        <fieldset>
+            <legend><h3>edit</h3></legend>
+            <input class="input-xlarge" type="text" placeholder="title" id="title" name="title" value="{{data.title}}"><br/>
+            <input class="input-xlarge" type="text" placeholder="the url" id="link" name="link" value="{{data.link}}"><br/>
+            <span class="help-block"><h4>use ',' or blank to seperate tags</h4></span>
+            <input class="input-xlarge" type="text" placeholder="tags" id="tag" name="tag" value="{{data.tag}}"><br />
+            <textarea class="input-xlarge" placeholder="note can be omitted." rows="8" id="note" name="note">{{data.note}}</textarea><br/>
+            <div class="row">
+                <button type="button" class="btn" onclick="check_validity()">Update</button>
+                <button type="button" class="btn btn-danger" onclick="location.href='/delete/{{data.id}}'">Delete</button>
+            </div>
+        </fieldset>
+    </form>
+    <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static',filename='jquery-1.8.3.min.js')}}"></script>
+</body>
+</html>

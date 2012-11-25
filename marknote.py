@@ -10,9 +10,9 @@ session = Session()
 
 class MarkNote(Base):
     __tablename__ = "MarkNote"
-    __table_args__ = {'mysql_engine':'InnoDB','mysql_charset':'utf8'}
+    #__table_args__ = {'mysql_engine':'InnoDB','mysql_charset':'utf8'}
     id = Column(Integer,primary_key=True)
-    title = Column(String(25))
+    title = Column(String(100))
     link = Column(String(250))
     tag = Column(String(100)) 
     note = Column(Text)
@@ -33,12 +33,8 @@ class MarkNote(Base):
     def add(self):
         session.add(self)
     
-    def get(self,num):
-        return session.query(self).order_by(self.time)
-
     def commit(self):
         session.commit()
-
 
 sqltool.eng_con_db(engine,"test")
 Base.metadata.create_all(engine)

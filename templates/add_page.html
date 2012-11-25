@@ -16,16 +16,22 @@
     </style>
 </head>
 <body>
+    <script type="text/javascript">
+        function check_validity(){
+            document.addform.submit();
+        }
+    </script>
+
     <div id="set" class="container">
-    <form action="/add_new" method="POST">
+    <form id="addform" name="addform" action="/add_new" method="POST">
         <fieldset>
             <legend><h3>add new bookmark or keynote</h3></legend>
             <input class="input-xlarge" type="text" placeholder="title" id="title" name="title"><br/>
             <input class="input-xlarge" type="text" placeholder="the url" id="link" name="link"><br/>
-            <span class="help-block"><h4>use ',' or blank to seperate tags</h4></span>
-            <input class="input-xlarge" type="text" placeholder="tags" id="tags" name="tags"><br />
+            <span class="help-block"><h4>use ',' to seperate tags</h4></span>
+            <input class="input-xlarge" type="text" placeholder="tags" id="tag" name="tag"><br />
             <textarea class="input-xlarge" placeholder="note can be omitted." rows="8" id="note" name="note"></textarea><br/>
-            <button type="submit" class="btn">Submit</button>
+            <button type="button" class="btn" onclick="check_validity()">Submit</button>
         </fieldset>
     </form>
     <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>

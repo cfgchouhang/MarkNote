@@ -7,14 +7,16 @@ class sqltool:
 
     @staticmethod
     def init_eng():
-        engine = create_engine('mysql://cfg:19921031@localhost/?charset=utf8')
+        #engine = create_engine('mysql://cfg:19921031@localhost/?charset=utf8')
+        engine = create_engine('sqlite:///test.db')
         Base = declarative_base()
         return engine,Base
 
     @staticmethod
     def eng_con_db(engine,dbname):
-        engine.execute("CREATE DATABASE IF NOT EXISTS %s" % dbname)
-        engine.execute("USE %s" % dbname)
+        #engine.execute("CREATE DATABASE IF NOT EXISTS %s" % dbname)
+        #engine.execute("USE %s" % dbname)
+        engine.execute("select 1").scalar()
 
     @staticmethod
     def eng_del_db(engine,dbname):
@@ -22,3 +24,4 @@ class sqltool:
         print m
         if m == 'y' or m == 'Y':
             engine.execute("DROP DATABASE IF EXISTS %s" % dbname)
+

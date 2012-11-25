@@ -17,13 +17,29 @@
             <div class="span1"><h5>order by</h5></div>
             <div class="btn-toolbar offset1">
                 <div class="btn-group">
-                    <button class="btn">title</button>
-                    <button class="btn">time</button>
-                    <button class="btn">tag</button>
-                    <button class="btn">random</button>
+                    <button class="btn" onclick="location.href='/marknote/time'">time</button>
+                    <button class="btn" onclick="location.href='/marknote/title'">title</button>
+                    <button class="btn" onclick="location.href='/marknote/tag'">tag</button>
+                    <button class="btn" onclick="location.href='/marknote/random'">random</button>
                 </div>
             </div>
         </div>
+        {% for row in data %}
+        <div class="row">
+            <div class="span5">
+            <h4>
+                {% if row.link != "" %}
+                    <a href="{{row.link}}">{{row.title}}</a>
+                {% else %}
+                    {{row.title}}
+                {% endif %}
+            </h4>
+            </div>
+            <div class="offset1">
+            <h5><a href="/edit/{{row.id}}">edit</a></h5>
+            </div>
+        </div>
+        {% endfor %}
     </div>
     <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
     <script src="{{url_for('static',filename='jquery-1.8.3.min.js')}}"></script>
