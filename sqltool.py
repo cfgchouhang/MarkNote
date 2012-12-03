@@ -14,6 +14,7 @@ class sqltool:
 
     @staticmethod
     def eng_con_db(engine,dbname):
+        #for mysql
         #engine.execute("CREATE DATABASE IF NOT EXISTS %s" % dbname)
         #engine.execute("USE %s" % dbname)
         engine.execute("select 1").scalar()

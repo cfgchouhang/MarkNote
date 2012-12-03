@@ -2,13 +2,17 @@ from marknote import *
 
 class querypart():
     @staticmethod
-    def query(order,num=15):
-        data = session.query(MarkNote).order_by(order).limit(num)
+    def query(table,order,num=15):
+        data = session.query(table).order_by(order).limit(num)
         return data
 
     @staticmethod
     def query_byid(id):
         return session.query(MarkNote).filter(MarkNote.id==id).first()
+
+    @staticmethod
+    def query_bytitle(table,title):
+        return session.query(table).filter(table.title==title).first()
 
     @staticmethod
     def delete_byid(id):

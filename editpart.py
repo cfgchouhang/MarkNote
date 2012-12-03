@@ -8,6 +8,8 @@ from querypart import querypart as qu
 app = Flask(__name__)
 sql = sqltool.sqltool
 mrno = marknote.MarkNote
+Tag = marknote.Tag
+Relate = marknote.Relate
 
 @app.route("/add_page")
 def add_page():
@@ -21,6 +23,24 @@ def add_new():
         item = mrno(a['title'],a['link'],tags,a['note'],datetime.now())
         item.add()
         item.commit()
+        for tag in tags.split(','):
+            a = qu.query_bytitle(Tag,tag)
+            if a == None:
+                print tag+" doesn't exist"
+                t = Tag(tag)
+                print t.id
+                t.relates = [Relate(tag)]
+                itme.relates = t.relates
+                t.add()
+                t.commit()
+            else:
+                a.relates += [Relate(tag)]
+                item.relates = a.relates
+
+        for a in qu.query(Relate,Relate.id):
+            print a
+        for r in qu.query(Tag,Tag.id,num=30):
+            print r
     return redirect('/marknote')
 
 @app.route("/edit/<id>")
