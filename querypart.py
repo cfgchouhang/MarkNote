@@ -2,8 +2,8 @@ from marknote import *
 
 class querypart():
     @staticmethod
-    def query(table,order,num=15):
-        data = session.query(table).order_by(order).limit(num)
+    def query(table,order,num=15,offset=0):
+        data = session.query(table).order_by(order).offset(offset).limit(num)
         return data
 
     @staticmethod
@@ -22,3 +22,7 @@ class querypart():
     @staticmethod
     def query_update(id,new):
         session.query(MarkNote).filter(MarkNote.id==id).update(new)
+
+    @staticmethod
+    def count(table):
+        return session.query(table).count()

@@ -30,6 +30,13 @@
                             <button class="btn" onclick="location.href='/marknote/random'">random</button>
                         </div>
                     </div>
+                    <div class="pagination">
+                        <ul>
+                        {% for p in range(5) %}
+                            <li><a href="/marknote/{{orderby}}/{{page}}/{{5*page+p+1}}">{{5*page+p+1}}</a></li>
+                        {% endfor %}
+                        </ul>
+                    </div>
                 </div>
                 {% for row in data %}
                 <div class="row">

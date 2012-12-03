@@ -7,25 +7,26 @@ from querypart import querypart as qu
 from marknote import MarkNote
 
 app = editpart.app
-
 @app.route("/")
 @app.route("/marknote/")
 def redir():
-    return redirect('/marknote/time')
+    return redirect('/marknote/time/0/1')
 
-@app.route("/marknote/<order>")
-def main(order):
-    if order == 'time':
-        a = desc(MarkNote.time)
-    elif order == 'title':
-        a = MarkNote.title
-    elif order == 'random':
+@app.route("/marknote/<orderby>/<int:majorpage>/<int:subpage>")
+def main(orderby,majorpage,subpage):
+    if orderby == 'time':
+        order = desc(MarkNote.time)
+    elif orderby == 'title':
+        order = MarkNote.title
+    elif orderby == 'random':
         #a = func.rand() for mysql
-        a = func.random()
+        order = func.random()
     else:
-        a = MarkNote.time
-    data = qu.query(MarkNote,a,num=20)
-    return render_template('main.html',data=data)
+        order = MarkNote.time
+    data = qu.query(MarkNote,order,num=15,offset=(subpage-1)*15)
+    print qu.count(MarkNote)
+    return render_template('main.html',data=data,\
+                            page=majorpage,orderby=orderby)
     
 if __name__=='__main__':
     app.debug = True

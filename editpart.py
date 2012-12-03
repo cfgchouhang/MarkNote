@@ -30,7 +30,7 @@ def add_new():
                 t = Tag(tag)
                 print t.id
                 t.relates = [Relate(tag)]
-                itme.relates = t.relates
+                item.relates = t.relates
                 t.add()
                 t.commit()
             else:
