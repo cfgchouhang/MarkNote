@@ -10,10 +10,10 @@ app = editpart.app
 @app.route("/")
 @app.route("/marknote/")
 def redir():
-    return redirect('/marknote/time/0/1')
+    return redirect('/marknote/time/1')
 
-@app.route("/marknote/<orderby>/<int:majorpage>/<int:subpage>")
-def main(orderby,majorpage,subpage):
+@app.route("/marknote/<orderby>/<int:page>")
+def main(orderby,page):
     if orderby == 'time':
         order = desc(MarkNote.time)
     elif orderby == 'title':
@@ -23,10 +23,10 @@ def main(orderby,majorpage,subpage):
         order = func.random()
     else:
         order = MarkNote.time
-    data = qu.query(MarkNote,order,num=15,offset=(subpage-1)*15)
+    data = qu.query(MarkNote,order,num=10,offset=(page-1)*10)
     print qu.count(MarkNote)
     return render_template('main.html',data=data,\
-                            page=majorpage,orderby=orderby)
+                            page=(page-page%5)+1,orderby=orderby)
     
 if __name__=='__main__':
     app.debug = True

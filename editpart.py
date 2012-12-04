@@ -20,6 +20,7 @@ def add_new():
     a = request.form
     if a['title']!='' or a['link']!='':
         tags = a['tag'].replace(' ','')
+        print 'tags: '+tags
         item = mrno(a['title'],a['link'],tags,a['note'],datetime.now())
         item.add()
         item.commit()
@@ -38,9 +39,11 @@ def add_new():
                 item.relates = a.relates
 
         for a in qu.query(Relate,Relate.id):
-            print a
+            print a.title
+            print a.tagid
+            print a.marknoteid
         for r in qu.query(Tag,Tag.id,num=30):
-            print r
+            print r.title
     return redirect('/marknote')
 
 @app.route("/edit/<id>")
