@@ -57,7 +57,9 @@
                                 <small>
                                     <a href="/tags/{{tags[0]}}">{{tags[0]}}</a>
                                 {% for tag in tags[1:] %}
+                                    {% if tag != '' %}
                                     <a href="/tags/{{tag}}">,{{tag}}</a>
+                                    {% endif %}
                                 {% endfor %}
                                 </small>
                             {% endif %}
