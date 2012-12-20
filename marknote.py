@@ -18,7 +18,7 @@ class MarkNote(Base):
     note = Column(Text)
     time = Column(DateTime)
 
-    relates = relationship("Relate",order_by="Relate.id",backref=backref("MarkNote"))
+    relates = relationship("Relate",order_by="Relate.id")
 
     def __init__(self,title,link,tag,note,time):
         self.title = title
@@ -28,8 +28,7 @@ class MarkNote(Base):
         self.time = time
 
     def __repr__(self):
-        return "MarkNote title:'%s'\nlink:'%s'\n\
-                tag:'%s'\nnote:'%s'\ntime:'%s'\n" %\
+        return "MarkNote title:%s|link:%s|tag:%s\nnote:%s\ntime:%s\n" %\
                 (self.title,self.link,self.tag,self.note,self.time)
 
     def add(self):
@@ -44,13 +43,13 @@ class Tag(Base):
     id = Column(Integer,primary_key=True)
     title = Column(String)
 
-    relates = relationship("Relate",order_by="Relate.id",backref=backref("Tag"))
+    relates = relationship("Relate",order_by="Relate.id")
 
     def __init__(self,title):
         self.title = title
 
     def __repr__(self):
-        return "Tag id:'%s',title:'%s'" %\
+        return "Tag id:%s|title:%s" %\
                 (self.id,self.title)
 
     def add(self):
@@ -67,14 +66,14 @@ class Relate(Base):
     tagid = Column(Integer,ForeignKey("Tag.id"))
     marknoteid = Column(Integer,ForeignKey("MarkNote.id"))
 
-    marknote = relationship("MarkNote",backref=backref("MarkNote.title"))
-    tag = relationship("Tag",backref=backref("Tag.title"))
+    #marknote = relationship("MarkNote",backref=backref("MarkNote.title"))
+    #tag = relationship("Tag",backref=backref("Tag.title"))
 
     def __init__(self,title):
         self.title = title
 
     def __repr__(self):
-        return "id :'%s',title:'%s',tagid:'%s',marknoteid:'%s'" %\
+        return "id :%s|title:%s|tagid:%s|marknoteid:%s" %\
                 (self.id,self.title,self.tagid,self.marknoteid)
 
     def add(self):
@@ -84,9 +83,10 @@ class Relate(Base):
         session.commit()
 
 #"test" is the base name for using mysql
-sqltool.eng_con_db(engine,"test")
+sqltool.eng_con_db(engine,"test1")
 Base.metadata.create_all(engine)
-#Base.metadate.drop_all(engine)
+#Base.metadata.drop_all(engine)
+#Base.metadata.tables['MarkNote'].drop(engine)
 #Base.metadata.tables['Relate'].drop(engine)
 #Base.metadata.tables['Tag'].drop(engine)
 

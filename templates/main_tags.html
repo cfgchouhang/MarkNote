@@ -44,28 +44,9 @@
                 </div>
                 {% for row in data %}
                 <div class="row">
-                    <div class="span7">
-                        <blockquote>
-                            {% if row.link != "" %}
-                                <h3><a href="{{row.link}}">{{row.title}}</a></h3>
-                            {% else %}
-                                <h3>{{row.title}}</h3>
-                            {% endif %}
-
-                            {% set tags = row.tag.split(',') %}
-                            {% if tags[0] != "" %}
-                                <small>
-                                    <a href="/tags/{{tags[0]}}">{{tags[0]}}</a>
-                                {% for tag in tags[1:] %}
-                                    <a href="/tags/{{tag}}">,{{tag}}</a>
-                                {% endfor %}
-                                </small>
-                            {% endif %}
-                        </blockquote>
-                    </div>
-                    <div class="span1">
-                        <h5><a href="/edit/{{row.id}}"><img src="{{url_for('static',filename='editicon.png')}}" /></a></h5>
-                    </div>
+                    <blockquote>
+                        <h3><a href="/marknote/tags/{{row.title}}">{{row.title}}</a></h3>
+                    </blockquote>
                 </div>
                 {% endfor %}
             </div>
@@ -74,4 +55,3 @@
     <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
     <script src="{{url_for('static',filename='jquery-1.8.3.min.js')}}"></script>
 </body>
-</html>

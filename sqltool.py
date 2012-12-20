@@ -8,7 +8,7 @@ class sqltool:
     @staticmethod
     def init_eng():
         #engine = create_engine('mysql://cfg:19921031@localhost/?charset=utf8')
-        engine = create_engine('sqlite:///test.db')
+        engine = create_engine('sqlite:///test1.db')
         Base = declarative_base()
         return engine,Base
 
