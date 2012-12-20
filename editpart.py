@@ -23,18 +23,19 @@ def add_new():
         print 'tags: '+tags
         item = MarkNote(a['title'],a['link'],tags,a['note'],datetime.now())
         for tag in tags.split(','):
-            rel = Relate(tag)
-            a = qu.query_bytitle(Tag,tag)
-            if a == None:
-                print tag+" doesn't exist"
-                t = Tag(tag)
-                t.relates += [rel]
-                item.relates += [rel]
-                t.add()
-                t.commit()
-            else:
-                a.relates += [rel]
-                item.relates += [rel]
+            if tag != '':
+                rel = Relate(tag)
+                a = qu.query_bytitle(Tag,tag)
+                if a == None:
+                    print tag+" doesn't exist"
+                    t = Tag(tag)
+                    t.relates += [rel]
+                    item.relates += [rel]
+                    t.add()
+                    t.commit()
+                else:
+                    a.relates += [rel]
+                    item.relates += [rel]
 
         item.add()
         item.commit()
