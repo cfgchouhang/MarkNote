@@ -36,9 +36,9 @@ def main(orderby,page):
 def tag_page(tag_title):
     rel = qu.query_bytitle(Tag,tag_title)
     for a in rel.relates:
-        print a
+        print a.title,a.tagid,a.marknoteid
     return redirect("/marknote/tag/1")
 
 if __name__=='__main__':
     app.debug = True
-    app.run(host='192.168.1.4')
+    app.run(host='127.0.0.1')
