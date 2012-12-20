@@ -30,4 +30,4 @@ def main(orderby,majorpage,subpage):
     
 if __name__=='__main__':
     app.debug = True
-    app.run(host='192.168.1.2')
+    app.run(host="192.168.1.4")
