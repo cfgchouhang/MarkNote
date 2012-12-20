@@ -11,6 +11,10 @@ class querypart():
         return session.query(MarkNote).filter(MarkNote.id==id).first()
 
     @staticmethod
+    def query_join(major,relate,majorid):
+        return session.query(major).join(relate).filter(relate.id==majorid).all()
+
+    @staticmethod
     def query_bytitle(table,title):
         return session.query(table).filter(table.title==title).first()
 

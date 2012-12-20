@@ -7,7 +7,7 @@ from querypart import querypart as qu
 
 app = Flask(__name__)
 sql = sqltool.sqltool
-mrno = marknote.MarkNote
+MarkNote = marknote.MarkNote
 Tag = marknote.Tag
 Relate = marknote.Relate
 
@@ -21,34 +21,40 @@ def add_new():
     if a['title']!='' or a['link']!='':
         tags = a['tag'].replace(' ','')
         print 'tags: '+tags
-        item = mrno(a['title'],a['link'],tags,a['note'],datetime.now())
-        item.add()
-        item.commit()
+        item = MarkNote(a['title'],a['link'],tags,a['note'],datetime.now())
         for tag in tags.split(','):
+            rel = Relate(tag)
             a = qu.query_bytitle(Tag,tag)
             if a == None:
                 print tag+" doesn't exist"
                 t = Tag(tag)
-                print t.id
-                t.relates = [Relate(tag)]
-                item.relates = t.relates
+                t.relates += [rel]
+                item.relates += [rel]
                 t.add()
                 t.commit()
             else:
-                a.relates += [Relate(tag)]
-                item.relates = a.relates
+                a.relates += [rel]
+                item.relates += [rel]
 
-        for a in qu.query(Relate,Relate.id):
-            print a.title
-            print a.tagid
-            print a.marknoteid
+        item.add()
+        item.commit()
+        print 'Relates'
+        for a in qu.query(Relate,Relate.id,num=50):
+            print 'Relate: '+a.title+'| tagid: '\
+                    +str(a.tagid)+' |noteid: '+str(a.marknoteid)
+        print 'Tags'
         for r in qu.query(Tag,Tag.id,num=30):
+            print str(r.id)+' '+r.title
+        print 'MarkNotes'
+        for r in qu.query(MarkNote,MarkNote.id,num=30):
             print r.title
+
     return redirect('/marknote')
 
 @app.route("/edit/<id>")
 def edit_page(id):
     item = qu.query_byid(id)
+    print item.id
     return render_template('edit_page.html',data=item)
 
 @app.route("/update/<id>",methods=["POST"])
