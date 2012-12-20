@@ -41,4 +41,4 @@ def tag_page(tag_title):
 
 if __name__=='__main__':
     app.debug = True
-    app.run(host='192.168.1.4')
+    app.run(host='192.168.1.2')
