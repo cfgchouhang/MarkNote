@@ -20,6 +20,8 @@ def add_new():
     a = request.form
     if a['title']!='' or a['link']!='':
         tags = a['tag'].replace(' ','')
+        if tags == '':
+            tags += 'untag'
         print 'tags: '+tags
         item = MarkNote(a['title'],a['link'],tags,a['note'],datetime.now())
         for tag in tags.split(','):
@@ -73,5 +75,5 @@ def update(id):
 @app.route("/delete/<id>")
 def delete(id):
     qu.delete_byid(id)
-    return redirect('/marknote/time')
+    return redirect('/marknote/time/1')
     
