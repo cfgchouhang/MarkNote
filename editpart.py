@@ -19,11 +19,14 @@ def add_page():
 def add_new():
     a = request.form
     if a['title']!='' or a['link']!='':
+        title = a['title']
         tags = a['tag'].replace(' ','')
+        if title == '':
+            title = 'untitle'
         if tags == '':
             tags += 'untag'
         print 'tags: '+tags
-        item = MarkNote(a['title'],a['link'],tags,a['note'],datetime.now())
+        item = MarkNote(title,a['link'],tags,a['note'],datetime.now())
         for tag in tags.split(','):
             if tag != '':
                 rel = Relate(tag)

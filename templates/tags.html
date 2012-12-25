@@ -12,7 +12,7 @@
 </head>
 <body>
     <div class="page-header" id="pageheader" >
-            <h1>Simple bookmark and keynote</h1>
+            <h1>{{tag}}</h1>
     </div>
     <div class="container-fluid">
         <div class="row">
@@ -20,27 +20,8 @@
                 <button type="button" class="btn btn-primary btn-large" onclick="location.href='/add_page'">Add</button>
             </div>
             <div class="span10">
-                <div class="row">
-                    <div class="span1"><h5>order by</h5></div>
-                    <div class="btn-toolbar span4">
-                        <div class="btn-group">
-                            <button class="btn" onclick="location.href='/marknote/time/{{page}}'">time</button>
-                            <button class="btn" onclick="location.href='/marknote/title/{{page}}'">title</button>
-                            <button class="btn" onclick="location.href='/marknote/tag/{{page}}'">tag</button>
-                            <button class="btn" onclick="location.href='/marknote/random/{{page}}'">random</button>
-                        </div>
-                    </div>
-                    <div class="pagination span5">
-                        <ul>
-                        {% if page != 1%}
-                            <li><a href="/marknote/{{orderby}}/{{page-5}}">&lt&lt</a></li>
-                        {% endif %}
-                        {% for p in range(5) %}
-                            <li><a href="/marknote/{{orderby}}/{{page+p}}">{{page+p}}</a></li>
-                        {% endfor %}
-                            <li><a href="/marknote/{{orderby}}/{{page+5}}">&gt&gt</a></li>
-                        </ul>
-                    </div>
+                <div>
+                    <button class="btn" onclick="location.href='/marknote/time/1'">Back</button>
                 </div>
                 {% for row in data %}
                 <div class="row">
@@ -54,14 +35,12 @@
 
                             {% set tags = row.tag.split(',') %}
                             {% if tags[0] != "" %}
-                                <small>
-                                    <a href="/marknote/tags/{{tags[0]}}">{{tags[0]}}</a>
+                                <a href="/tags/{{tags[0]}}">{{tags[0]}}</a>
                                 {% for tag in tags[1:] %}
                                     {% if tag != '' %}
-                                    <a href="/marknote/tags/{{tag}}">,{{tag}}</a>
+                                    <a href="/tags/{{tag}}">,{{tag}}</a>
                                     {% endif %}
                                 {% endfor %}
-                                </small>
                             {% endif %}
                         </blockquote>
                     </div>
