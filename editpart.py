@@ -25,7 +25,8 @@ def add_new():
             title = 'untitle'
         if tags == '':
             tags += 'untag'
-        print 'tags: '+tags
+        print 'add new:\n'+title+'\nlink: '+a['link']+'\ntags: '+tags
+        print a['note']
         item = MarkNote(title,a['link'],tags,a['note'],datetime.now())
         for tag in tags.split(','):
             if tag != '':
@@ -44,17 +45,7 @@ def add_new():
 
         item.add()
         item.commit()
-        print 'Relates'
-        for a in qu.query(Relate,Relate.id,num=50):
-            print 'Relate: '+a.title+'| tagid: '\
-                    +str(a.tagid)+' |noteid: '+str(a.marknoteid)
-        print 'Tags'
-        for r in qu.query(Tag,Tag.id,num=30):
-            print str(r.id)+' '+r.title
-        print 'MarkNotes'
-        for r in qu.query(MarkNote,MarkNote.id,num=30):
-            print r.title
-
+        
     return redirect('/marknote')
 
 @app.route("/edit/<id>")
@@ -78,5 +69,18 @@ def update(id):
 @app.route("/delete/<id>")
 def delete(id):
     qu.delete_byid(id)
-    return redirect('/marknote/time/1')
+    return redirect('/marknote/')
     
+@app.route("/marknote/test")
+def test(num):
+    print 'Relates'
+    for a in qu.query(Relate,Relate.id):
+        print 'Relate: '+a.title+'| tagid: '\
+                +str(a.tagid)+' |noteid: '+str(a.marknoteid)
+    print 'Tags'
+    for r in qu.query(Tag,Tag.id):
+        print str(r.id)+' '+r.title
+    print 'MarkNotes'
+    for r in qu.query(MarkNote,MarkNote.id):
+        print r.title
+    return redirect('/marknote/time/1')

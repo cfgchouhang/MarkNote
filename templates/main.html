@@ -11,20 +11,30 @@
     </style>
 </head>
 <body>
+    <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
+    <script src="{{url_for('static',filename='jquery-1.8.3.min.js')}}"></script>
     <div class="page-header" id="pageheader" >
             <h1>Simple bookmark and keynote</h1>
     </div>
     <div class="container-fluid">
         <div class="row">
             <div class="span4">
-                <button type="button" class="btn btn-primary btn-large" onclick="location.href='/add_page'">Add</button>
+                <div>
+                    <button type="button" class="btn btn-primary btn-large" onclick="location.href='/add_page'">Add</button>
+                </div>
+                <br />
+                <div>
+                    <form action="/marknote/search" method="GET">
+                        <input type="text" placeholder="search" id="search" name="search">
+                    </form>
+                </div>
             </div>
             <div class="span10">
                 <div class="row">
                     <div class="span1"><h5>order by</h5></div>
                     <div class="btn-toolbar span4">
                         <div class="btn-group">
-                            <button class="btn" onclick="location.href='/marknote/time/{{page}}'">time</button>
+                            <button class="btn" onclick="location.href='/marknote/check_dec/{{curp}}'">time</button>
                             <button class="btn" onclick="location.href='/marknote/title/{{page}}'">title</button>
                             <button class="btn" onclick="location.href='/marknote/tag/{{page}}'">tag</button>
                             <button class="btn" onclick="location.href='/marknote/random/{{page}}'">random</button>
@@ -47,33 +57,40 @@
                     <div class="span7">
                         <blockquote>
                             {% if row.link != "" %}
-                                <h3><a href="{{row.link}}">{{row.title}}</a></h3>
+                            <h3><a href="{{row.link}}">{{row.title}}</a></h3>
                             {% else %}
-                                <h3>{{row.title}}</h3>
+                            <h3>{{row.title}}</h3>
                             {% endif %}
 
                             {% set tags = row.tag.split(',') %}
                             {% if tags[0] != "" %}
-                                <small>
-                                    <a href="/marknote/tags/{{tags[0]}}">{{tags[0]}}</a>
-                                {% for tag in tags[1:] %}
-                                    {% if tag != '' %}
-                                    <a href="/marknote/tags/{{tag}}">,{{tag}}</a>
-                                    {% endif %}
-                                {% endfor %}
-                                </small>
+                            <small>
+                                <a href="/marknote/tags/{{tags[0]}}">{{tags[0]}}</a>
+                            {% for tag in tags[1:] %}
+                                {% if tag != '' %}
+                                <a href="/marknote/tags/{{tag}}">,{{tag}}</a>
+                                {% endif %}
+                            {% endfor %}
+                            </small>
                             {% endif %}
                         </blockquote>
+                    </div>
+                    <div class="span1">
+                        <button type="button" class="btn" data-toggle="collapse" data-target="#collapse{{row.id}}">
+                            more
+                        </button>
+                        <div id="collapse{{row.id}}" class="collapse">
+                            {{row.note}}
+                        </div>
                     </div>
                     <div class="span1">
                         <h5><a href="/edit/{{row.id}}"><img src="{{url_for('static',filename='editicon.png')}}" /></a></h5>
                     </div>
                 </div>
+                
                 {% endfor %}
             </div>
         </div>
     </div>
-    <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
-    <script src="{{url_for('static',filename='jquery-1.8.3.min.js')}}"></script>
-</body>
+    </body>
 </html>

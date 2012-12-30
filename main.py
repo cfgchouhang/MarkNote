@@ -9,21 +9,32 @@ from marknote import MarkNote,Tag
 global dec
 dec = 0
 app = editpart.app
+request = editpart.request
+
 @app.route("/")
 @app.route("/marknote/")
 def redir():
+    global dec
+    dec = 0
     return redirect('/marknote/time/1')
+
+@app.route("/marknote/check_dec/<int:p>")
+def checktime(p):
+    global dec
+    if dec == 0:
+        dec = 1
+    else :
+        dec = 0
+    return redirect('/marknote/time/'+str(p))
 
 @app.route("/marknote/<orderby>/<int:page>")
 def main(orderby,page):
     global dec
     if orderby == 'time':
-        if dec == 0:
+        if dec == 1:
             order = desc(MarkNote.time)
-            dec = 1
         else:
             order = MarkNote.time
-            dec = 0
     elif orderby == 'title':
         dec = 0
         order = MarkNote.title
@@ -42,7 +53,7 @@ def main(orderby,page):
     data = qu.query(MarkNote,order,num=10,offset=(page-1)*10)
     print qu.count(MarkNote)
     return render_template('main.html',data=data,\
-                            page=page-((page-1)%5),orderby=orderby)
+                            page=page-((page-1)%5),orderby=orderby,curp=page)
 
 @app.route("/marknote/tags/<tag_title>")
 def tag_page(tag_title):
@@ -54,6 +65,12 @@ def tag_page(tag_title):
     for a in note:
         print a.title, a.tag
     return render_template('tags.html',data=note)
+
+@app.route("/marknote/search",methods=["GET"])
+def search():
+    term = request.args.get('search','')
+    data = qu.search(term)
+    return render_template('search_page.html',data=data)
 
 if __name__=='__main__':
     app.debug = True
