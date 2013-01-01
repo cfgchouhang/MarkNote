@@ -45,7 +45,8 @@ def add_new():
 
         item.add()
         item.commit()
-        
+        for s in item.note.split("\n"):
+            print s
     return redirect('/marknote')
 
 @app.route("/edit/<id>")

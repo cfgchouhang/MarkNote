@@ -6,9 +6,9 @@ from sqlalchemy.orm import sessionmaker
 class sqltool:
 
     @staticmethod
-    def init_eng():
+    def init_eng(dbname):
         #engine = create_engine('mysql://cfg:19921031@localhost/?charset=utf8')
-        engine = create_engine('sqlite:///test1.db')
+        engine = create_engine('sqlite:///'+dbname+'.db')
         Base = declarative_base()
         return engine,Base
 

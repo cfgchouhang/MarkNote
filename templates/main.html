@@ -11,8 +11,8 @@
     </style>
 </head>
 <body>
-    <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
     <script src="{{url_for('static',filename='jquery-1.8.3.min.js')}}"></script>
+    <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
     <div class="page-header" id="pageheader" >
             <h1>Simple bookmark and keynote</h1>
     </div>
@@ -57,7 +57,7 @@
                     <div class="span7">
                         <blockquote>
                             {% if row.link != "" %}
-                            <h3><a href="{{row.link}}">{{row.title}}</a></h3>
+                            <h3><a href="{{row.link}}" target="_blank">{{row.title}}</a></h3>
                             {% else %}
                             <h3>{{row.title}}</h3>
                             {% endif %}
@@ -74,14 +74,16 @@
                             </small>
                             {% endif %}
                         </blockquote>
+                        <div id="collapse{{row.id}}" class="collapse">
+                            {% for note in row.note.split("\n") %}
+                                {{note}}<br/>
+                            {% endfor %}
+                        </div>
                     </div>
                     <div class="span1">
                         <button type="button" class="btn" data-toggle="collapse" data-target="#collapse{{row.id}}">
                             more
                         </button>
-                        <div id="collapse{{row.id}}" class="collapse">
-                            {{row.note}}
-                        </div>
                     </div>
                     <div class="span1">
                         <h5><a href="/edit/{{row.id}}"><img src="{{url_for('static',filename='editicon.png')}}" /></a></h5>

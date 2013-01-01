@@ -15,7 +15,7 @@ request = editpart.request
 @app.route("/marknote/")
 def redir():
     global dec
-    dec = 0
+    dec = 1
     return redirect('/marknote/time/1')
 
 @app.route("/marknote/check_dec/<int:p>")

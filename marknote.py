@@ -4,7 +4,7 @@ from sqlalchemy import Integer,String,DateTime,Text
 from sqlalchemy import Column,MetaData,ForeignKey
 from sqlalchemy.orm import sessionmaker,relationship,backref
 
-engine,Base = sqltool.init_eng()
+engine,Base = sqltool.init_eng("marknote")
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -83,10 +83,6 @@ class Relate(Base):
         session.commit()
 
 #"test" is the base name for using mysql
-sqltool.eng_con_db(engine,"test1")
+sqltool.eng_con_db(engine,"marknote")
 Base.metadata.create_all(engine)
-#Base.metadata.drop_all(engine)
-#Base.metadata.tables['MarkNote'].drop(engine)
-#Base.metadata.tables['Relate'].drop(engine)
-#Base.metadata.tables['Tag'].drop(engine)
 
