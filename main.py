@@ -3,6 +3,7 @@ from flask import redirect,render_template
 from sqlalchemy.sql.expression import func
 from sqlalchemy import desc
 import editpart
+import urltool as url
 from querypart import querypart as qu
 from marknote import MarkNote,Tag
 

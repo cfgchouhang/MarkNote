@@ -29,7 +29,7 @@
             <input class="input-xlarge" type="text" placeholder="the url" id="link" name="link" value="{{data.link}}"><br/>
             <span class="help-block"><h4>use ',' or blank to seperate tags</h4></span>
             <input class="input-xlarge" type="text" placeholder="tags" id="tag" name="tag" value="{{data.tag}}"><br />
-            <textarea class="input-xlarge" placeholder="note can be omitted." rows="8" id="note" name="note">{{data.note}}</textarea><br/>
+            <textarea class="input-xxlarge" placeholder="note can be omitted." rows="20" id="note" name="note">{{data.note}}</textarea><br/>
             <div class="row">
                 <button type="button" class="btn" onclick="check_validity()">Update</button>
                 <button type="button" class="btn btn-danger" onclick="location.href='/delete/{{data.id}}'">Delete</button>

@@ -24,15 +24,13 @@
 
     <div id="set" class="container">
     <form id="addform" name="addform" action="/add_new" method="POST">
-        <fieldset>
             <legend><h3>add new bookmark or keynote</h3></legend>
             <input class="input-xlarge" type="text" placeholder="title" id="title" name="title"><br/>
             <input class="input-xlarge" type="text" placeholder="the url" id="link" name="link"><br/>
             <span class="help-block"><h4>use ',' to seperate tags</h4></span>
             <input class="input-xlarge" type="text" placeholder="tags" id="tag" name="tag"><br />
-            <textarea class="input-xlarge" placeholder="note can be omitted." rows="8" id="note" name="note"></textarea><br/>
+            <textarea class="input-xxlarge" placeholder="note can be omitted." rows="20" id="note" name="note"></textarea><br/>
             <button type="button" class="btn" onclick="check_validity()">Submit</button>
-        </fieldset>
     </form>
     <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
     <script src="{{url_for('static',filename='jquery-1.8.3.min.js')}}"></script>
