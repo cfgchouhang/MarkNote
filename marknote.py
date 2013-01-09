@@ -4,7 +4,8 @@ from sqlalchemy import Integer,String,DateTime,Text
 from sqlalchemy import Column,MetaData,ForeignKey
 from sqlalchemy.orm import sessionmaker,relationship,backref
 
-engine,Base = sqltool.init_eng("marknote")
+dbname = "marknote"
+engine,Base = sqltool.init_eng(dbname)
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -16,15 +17,17 @@ class MarkNote(Base):
     link = Column(String)
     tag = Column(String) 
     note = Column(Text)
+    img = Column(Text)
     time = Column(DateTime)
 
     relates = relationship("Relate",order_by="Relate.id")
 
-    def __init__(self,title,link,tag,note,time):
+    def __init__(self,title,link,tag,note,img,time):
         self.title = title
         self.link = link
         self.tag = tag
         self.note = note
+        self.img = img
         self.time = time
 
     def __repr__(self):
@@ -83,6 +86,6 @@ class Relate(Base):
         session.commit()
 
 #"test" is the base name for using mysql
-sqltool.eng_con_db(engine,"marknote")
+sqltool.eng_con_db(engine,dbname)
 Base.metadata.create_all(engine)
 
