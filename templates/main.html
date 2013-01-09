@@ -62,16 +62,16 @@
                             {% endif %}
 
                             {% set tags = row.tag.split(',') %}
-                            {% if tags[0] != "" %}
                             <small>
+                            {% if tags[0] != "" %}
                                 <a href="/marknote/tags/{{tags[0]}}">{{tags[0]}}</a>
+                            {% endif %}
                             {% for tag in tags[1:] %}
                                 {% if tag != '' %}
-                                <a href="/marknote/tags/{{tag}}">,{{tag}}</a>
+                                <a href="/marknote/tags/{{tag}}">| {{tag}}</a>
                                 {% endif %}
                             {% endfor %}
                             </small>
-                            {% endif %}
                         </blockquote>
                         {% set note = row.note.split("\n") %}
                         {% if note[0] != "" %}

@@ -1,6 +1,5 @@
 *.py[co]
 *.db*
-static/images/
 
 # Packages
 *.egg

@@ -1,4 +1,4 @@
-from sqlalchemy import or_
+from sqlalchemy import or_,and_
 from marknote import *
 
 class querypart():
@@ -25,6 +25,10 @@ class querypart():
         session.query(Relate).filter(Relate.marknoteid==id).delete()
         session.commit()
 
+    @staticmethod
+    def delete_rel(noteid,tag):
+        session.query(Relate).filter(and_(Relate.marknoteid==noteid,\
+                                          Relate.title==tag)).delete()
     @staticmethod
     def query_update(id,new):
         session.query(MarkNote).filter(MarkNote.id==id).update(new)
