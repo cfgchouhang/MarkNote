@@ -29,9 +29,12 @@ class querypart():
     def delete_rel(noteid,tag):
         session.query(Relate).filter(and_(Relate.marknoteid==noteid,\
                                           Relate.title==tag)).delete()
+        session.commit()
+
     @staticmethod
     def query_update(id,new):
         session.query(MarkNote).filter(MarkNote.id==id).update(new)
+        session.commit()
 
     @staticmethod
     def count(table):

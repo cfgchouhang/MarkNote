@@ -84,6 +84,9 @@ def update(noteid):
         if a[i] != '':
             update[i] = a[i]
 
+    imgurl, hasimg = url.getimgurl(update['note'])
+    update['img'] = url.procimgurl(noteid,imgurl)
+    print update['img']
     #if tag_dict[tags] == 0, remove relation between tags and note
     for t in update['tag'].split(','):
         if t != '':
@@ -92,6 +95,8 @@ def update(noteid):
                 newtag = qu.query_bytitle(Tag,t)
                 if newtag == None:
                     newtag = Tag(t)
+                    newtag.add()
+                    newtag.commit()
                 rel = Relate(t)
                 newtag.relates += [rel]
                 item.relates += [rel]
@@ -122,4 +127,6 @@ def test(num):
     print 'MarkNotes'
     for r in qu.query(MarkNote,MarkNote.id,num=num):
         print r.title
+        print r.note
+        print r.img
     return redirect('/marknote/time/1')

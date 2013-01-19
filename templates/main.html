@@ -68,7 +68,7 @@
                             {% endif %}
                             {% for tag in tags[1:] %}
                                 {% if tag != '' %}
-                                <a href="/marknote/tags/{{tag}}">| {{tag}}</a>
+                                 | <a href="/marknote/tags/{{tag}}">{{tag}}</a>
                                 {% endif %}
                             {% endfor %}
                             </small>
@@ -89,7 +89,11 @@
                                         <img src="{{url_for('static',filename='images/'+imgs[imgn])}}" /><br />
                                         {% set imgn = imgn+1 %}
                                     {% else %}
-                                        {{a}}<br/>
+                                        {% if "http:" in a %}
+                                            <a href="{{a}}" target="_blank" >link</a><br />
+                                        {% else : %}
+                                            {{a}}<br />
+                                        {% endif %}
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}
