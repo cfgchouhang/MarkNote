@@ -3,8 +3,11 @@ from marknote import *
 
 class querypart():
     @staticmethod
-    def query(table,order,num=100,offset=0):
-        data = session.query(table).order_by(order).offset(offset).limit(num)
+    def query(table,order,num=0,offset=0):
+        if num == 0:
+            data = session.query(table).order_by(order).offset(offset)
+        else :
+            data = session.query(table).order_by(order).offset(offset).limit(num)
         return data
 
     @staticmethod
@@ -32,8 +35,8 @@ class querypart():
         session.commit()
 
     @staticmethod
-    def query_update(id,new):
-        session.query(MarkNote).filter(MarkNote.id==id).update(new)
+    def query_update(table,id,new):
+        session.query(table).filter(table.id==id).update(new)
         session.commit()
 
     @staticmethod

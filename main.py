@@ -8,7 +8,7 @@ from querypart import querypart as qu
 from marknote import MarkNote,Tag
 
 global dec
-dec = 0
+dec = 1
 app = editpart.app
 request = editpart.request
 

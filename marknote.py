@@ -11,6 +11,7 @@ session = Session()
 
 class MarkNote(Base):
     __tablename__ = "MarkNote"
+    #for mysql
     #__table_args__ = {'mysql_engine':'InnoDB','mysql_charset':'utf8'}
     id = Column(Integer,primary_key=True)
     title = Column(String)
@@ -42,14 +43,17 @@ class MarkNote(Base):
 
 class Tag(Base):
     __tablename__ = "Tag"
+    #for mysql
     #__table_args__ = {'mysql_engine':'InnoDB','mysql_charset':'utf8'}
     id = Column(Integer,primary_key=True)
     title = Column(String)
+    count = Column(Integer)
 
     relates = relationship("Relate",order_by="Relate.id")
 
-    def __init__(self,title):
+    def __init__(self,title,count):
         self.title = title
+        self.count = count
 
     def __repr__(self):
         return "Tag id:%s|title:%s" %\
@@ -69,9 +73,6 @@ class Relate(Base):
     tagid = Column(Integer,ForeignKey("Tag.id"))
     marknoteid = Column(Integer,ForeignKey("MarkNote.id"))
 
-    #marknote = relationship("MarkNote",backref=backref("MarkNote.title"))
-    #tag = relationship("Tag",backref=backref("Tag.title"))
-
     def __init__(self,title):
         self.title = title
 
@@ -85,7 +86,6 @@ class Relate(Base):
     def commit(self):
         session.commit()
 
-#"test" is the base name for using mysql
 sqltool.eng_con_db(engine,dbname)
 Base.metadata.create_all(engine)
 
