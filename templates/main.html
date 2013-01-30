@@ -1,5 +1,6 @@
 <!DOCTYPE HTML>
-<html> <head>
+<html>
+<head>
     <title>KeyNote</title>
     <!-- Bootstrap -->
     <link href="{{url_for('static',filename='bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" media="screen">
@@ -8,10 +9,20 @@
             text-align: center;
         }
     </style>
+    <script type="text/javascript" src="{{url_for('static',filename='jquery-1.8.3.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $('.tohide').hide();
+        });
+
+        function unfold(collid){
+            $(collid).toggle(200);
+        }
+    </script>
 </head>
 <body>
-    <script src="{{url_for('static',filename='jquery-1.8.3.min.js')}}"></script>
-    <script src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
+    
     <div class="page-header" id="pageheader" >
             <h1>Simple bookmark and keynote</h1>
     </div>
@@ -53,7 +64,7 @@
                 </div>
                 {% for row in data %}
                 <div class="row">
-                    <div class="span7">
+                    <div class="span8 well well-small" >
                         <blockquote>
                             {% if row.link != "" %}
                             <h3><a href="{{row.link}}" target="_blank">{{row.title}}</a></h3>
@@ -75,8 +86,9 @@
                         </blockquote>
                         {% set note = row.note.split("\n") %}
                         {% if note[0] != "" %}
-                        <div id="collapse{{row.id}}" class="collapse">
+                        <div id="collapse{{row.id}}" class="tohide">
                             {% set isimg = False %}
+                            {% set islink = False %}
                             {% set imgn = 0 %}
                             {% set imgs = row.img.split(',') %}
                             {% for a in note %}
@@ -84,32 +96,32 @@
                                     {% set isimg = True %}
                                 {% elif '</img>' in a: %}
                                     {% set isimg = False %}
+                                {% elif '<link>' in a: %}
+                                    {% set islink = True %}
+                                {% elif '</link>' in a: %}
+                                    {% set islink = False %}
                                 {% else : %}
-                                    {% if isimg :%}
-                                        <img src="{{url_for('static',filename='images/'+imgs[imgn])}}" /><br />
+                                    {% if isimg : %}
+                                        <a href="{{url_for('static',filename='images/'+imgs[imgn])}}" target="_blank">
+                                        <img src="{{url_for('static',filename='images/'+imgs[imgn])}}" /></a><br />
                                         {% set imgn = imgn+1 %}
+                                    {% elif islink : %}
+                                        <a href="{{a}}" target="_blank" >link</a><br />
                                     {% else %}
-                                        {% if "http:" in a %}
-                                            <a href="{{a}}" target="_blank" >link</a><br />
-                                        {% else : %}
-                                            {{a}}<br />
-                                        {% endif %}
+                                        {{a}}<br />
                                     {% endif %}
                                 {% endif %}
                             {% endfor %}
                         </div>
                         {% endif %}
                     </div>
-                    <div class="span1">
-                        <button type="button" class="btn" data-toggle="collapse" data-target="#collapse{{row.id}}">
-                            more
-                        </button>
+                    <div>
+                        <h5><img src="{{url_for('static',filename='more.png')}}" onclick="unfold('#collapse{{row.id}}')" /></h5>
                     </div>
-                    <div class="span1">
-                        <h5><a href="/edit/{{row.id}}"><img src="{{url_for('static',filename='editicon.png')}}" /></a></h5>
+                    <div>
+                        <h5><a href="/edit/{{row.id}}"><img src="{{url_for('static',filename='edit.png')}}" /></a></h5>
                     </div>
                 </div>
-                
                 {% endfor %}
             </div>
         </div>

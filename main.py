@@ -41,8 +41,8 @@ def main(orderby,page):
         order = MarkNote.title
     elif orderby == 'tag':
         dec = 0
-        data = qu.query(Tag,Tag.id,num=10,offset=(page-1)*10)
-        return render_template('main_tags.html',data=data,\
+        data = qu.query(Tag,Tag.id)
+        return render_template('tags_page.html',data=data,\
                                 page=page-((page-1)%5),orderby='tag')
     elif orderby == 'random':
         #a = func.rand() for mysql

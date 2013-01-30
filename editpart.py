@@ -70,17 +70,19 @@ def add_new():
 @app.route("/edit/<id>")
 def edit_page(id):
     item = qu.query_byid(id)
-    print item.id
+    print 'edit', item.id
     return render_template('edit_page.html',data=item)
 
 @app.route("/update/<noteid>",methods=["POST"])
 def update(noteid):
     a = {}
+    update = {}
     for i in request.form.keys():
         a[i] = request.form[i]
     item = qu.query_byid(noteid)
-    update = {'title':item.title,'link':item.link,\
-              'tag':item.tag,'note':item.note}
+    if a['title']==item.title and a['link']==item.link\
+        and a['tag']==item.tag and a['note']==item.note:
+        return redirect('/marknote/')
     a['tag'] = a['tag'].replace(' ','')
     tag_dict = {}
     for t in item.tag.split(','):
@@ -88,12 +90,13 @@ def update(noteid):
             tag_dict[t] = 0
 
     for i in a.keys():
-        if a[i] != '':
-            update[i] = a[i]
+        update[i] = a[i]
+    if update['title'] == '':
+        update['title'] = item.title
 
     imgurl, hasimg = url.getimgurl(update['note'])
     update['img'] = url.procimgurl(noteid,imgurl)
-    print update['img']
+    print 'img',update['img']
     #if tag_dict[tags] == 0, remove relation between tags and note
     for t in update['tag'].split(','):
         if t != '':
@@ -110,12 +113,11 @@ def update(noteid):
                 newtag.relates += [rel]
                 item.relates += [rel]
             tag_dict[t] = 1
-    print tag_dict
+    print 'tag',tag_dict.keys()
     for t in tag_dict.keys():
         if tag_dict[t] == 0:
             qu.delete_rel(noteid,t)
 
-    print 'edit'
     qu.query_update(MarkNote,noteid,update)
     return redirect('/marknote/')
 
@@ -126,6 +128,8 @@ def delete(id):
         if tag != '':
             t = qu.query_bytitle(Tag,tag)
             qu.query_update(Tag,t.id,{'count':t.count-1})
+            if t.count == 0:
+                qu.delete_tag(t.id)
 
     qu.delete_byid(id)
     return redirect('/marknote/')

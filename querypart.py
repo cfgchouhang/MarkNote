@@ -35,6 +35,11 @@ class querypart():
         session.commit()
 
     @staticmethod
+    def delete_tag(tagid):
+        session.query(Tag).filter(Tag.id==tagid).delete()
+        session.commit()
+
+    @staticmethod
     def query_update(table,id,new):
         session.query(table).filter(table.id==id).update(new)
         session.commit()
