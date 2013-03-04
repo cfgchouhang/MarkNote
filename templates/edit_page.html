@@ -18,6 +18,12 @@
         function check_validity(){
             document.editform.submit();
         }
+        function del_confirm(noteid){
+            var r=confirm("Sure to delete it?");
+            if(r){
+                location.href="/delete/"+noteid;
+            }
+        }
     </script>
 </head>
 <body>
@@ -32,7 +38,7 @@
             <textarea class="input-xxlarge" placeholder="note can be omitted." rows="20" id="note" name="note">{{data.note}}</textarea><br/>
             <div class="row">
                 <button type="button" class="btn" onclick="check_validity()">Update</button>
-                <button type="button" class="btn btn-danger" onclick="location.href='/delete/{{data.id}}'">Delete</button>
+                <button type="button" class="btn btn-danger" onclick="del_confirm({{data.id}})">Delete</button>
             </div>
         </fieldset>
     </form>
