@@ -30,6 +30,7 @@ def checktime(p):
 
 @app.route("/marknote/<orderby>/<int:page>")
 def main(orderby,page):
+    '''
     global dec
     if orderby == 'time':
         if dec == 1:
@@ -51,8 +52,13 @@ def main(orderby,page):
     else:
         order = desc(MarkNote.time)
         dec = 1
-    data = qu.query(MarkNote,order,num=10,offset=(page-1)*10)
+    '''
+    data = get_data(orderby,page)
+    #data = qu.query(MarkNote,order,num=10,offset=(page-1)*10)
     print qu.count(MarkNote)
+    if orderby == "tag":
+        return render_template('tags_page.html',data=data,\
+                                page=page-((page-1)%5),orderby='tag')
     return render_template('main.html',data=data,\
                             page=page-((page-1)%5),orderby=orderby,curp=page)
 
@@ -73,6 +79,40 @@ def search():
     data = qu.search(term)
     return render_template('search_page.html',data=data)
 
+@app.route("/marknote/get_data",methods=["GET"])
+def get_data(orderby="time",page=1):
+    global dec
+    if orderby == 'time':
+        if dec == 1:
+            order = desc(MarkNote.time)
+        else:
+            order = MarkNote.time
+    elif orderby == 'title':
+        dec = 0
+        order = MarkNote.title
+    elif orderby == 'tag':
+        dec = 0
+        return qu.query(Tag,Tag.id)
+    elif orderby == 'random':
+        #a = func.rand() for mysql
+        order = func.random()
+        dec = 0
+    else:
+        order = desc(MarkNote.time)
+        dec = 1
+    print request.args.get
+    return qu.query(MarkNote,order,num=10,offset=(page-1)*10)
+
+@app.route("/marknote/get_test",methods=["GET","POST"])
+def get_test():
+    if request.method == "GET":
+        print request.args.get("orderby")
+        print request.args.get("page")
+    else:
+        print request.form
+    return "get success"
+
 if __name__=='__main__':
     app.debug = True
     app.run(host='127.0.0.1')
+    #app.run(host='192.168.1.2')

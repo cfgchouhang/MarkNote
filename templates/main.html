@@ -19,6 +19,8 @@
     <script type="text/javascript" src="{{url_for('static',filename='synhigh/scripts/shBrushJScript.js')}}"></script>
     <script type="text/javascript" src="{{url_for('static',filename='synhigh/scripts/shBrushPython.js')}}"></script>
     <script type="text/javascript">
+        var w = $(window);
+        var d = $(document);
         $(document).ready(function(){
             $('.tohide').hide();
         });
@@ -31,12 +33,16 @@
                 location.href="/delete/"+noteid;
             }
         }
+        function atbottom(){
+            if(w.scrollTop()+w.height()>=d.height()-100)
+                alert("atbottom");
+        }
+        w.scroll(atbottom);
         SyntaxHighlighter.config.tagName="sh";
         SyntaxHighlighter.all();
     </script>
 </head>
 <body>
-            
     <div class="page-header" id="pageheader" >
             <h1>Simple bookmark and keynote</h1>
     </div>
@@ -161,6 +167,7 @@
         </div>
     </div>
     <script type="text/javascript">
+        
     </script>
     </body>
 </html>
