@@ -76,7 +76,11 @@
                                         <img src="{{url_for('static',filename='images/'+imgs[imgn])}}" /></a><br />
                                         {% set imgn = imgn+1 %}
                                     {% elif islink : %}
-                                        <a href="{{a}}" target="_blank" >link</a><br />
+                                        {% if '|||' in a : %}
+                                            <a href="{{a[a.find('http'):]}}" target="_blank" >{{a[0:a.find('|||')]}}</a><br />
+                                        {% else %}
+                                            <a href="{{a}}" target="_blank" >link</a><br />
+                                        {% endif %}
                                     {% else %}
                                         {{a}}<br />
                                     {% endif %}
