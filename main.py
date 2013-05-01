@@ -46,7 +46,7 @@ def get_load():
     data = get_data(orderby,int(offset))
     return render_template('load.html',data=data)
 
-@app.route("/marknote/get_data",methods=["GET"])
+@app.route("/marknote/get_data")
 def get_data(orderby="time",page=1):
     global dec
     if orderby == 'time':
@@ -67,7 +67,6 @@ def get_data(orderby="time",page=1):
     else:
         order = desc(MarkNote.time)
         dec = 1
-    print request.args.get
     return qu.query(MarkNote,order,num=10,offset=(page-1)*10)
 
 @app.route("/marknote/tags/<tag_title>")
@@ -99,4 +98,4 @@ def get_test():
 if __name__=='__main__':
     app.debug = True
     app.run(host='127.0.0.1')
-    #app.run(host='192.168.1.2')
+    #app.run(host='192.168.1.5')
