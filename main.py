@@ -113,6 +113,4 @@ def get_test():
     return "get success"
 
 if __name__=='__main__':
-    app.debug = True
     app.run(host='127.0.0.1')
-    #app.run(host='192.168.1.2')
