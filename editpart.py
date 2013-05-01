@@ -146,6 +146,7 @@ def test(num):
     print 'MarkNotes'
     for r in qu.query(MarkNote,MarkNote.id,num=num):
         print '_______________'
+        print r.id
         print r.title
         print r.link
         #print r.note
