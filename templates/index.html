@@ -14,7 +14,9 @@
     <script type="text/javascript">
         var w = $(window);
         var d = $(document);
-        var current_page = {{page}};
+        var pageoffset = {{page}};
+        var orderby = "{{orderby}}";
+
         $(document).ready(function(){
             $(".tohide").hide();
         });
@@ -29,12 +31,12 @@
         }
         function loadmore(data){
             $("#loadee").append(data);
+            $(".tohide").hide();
         }
         function atbottom(){
-            if(w.scrollTop()+w.height()>=d.height()-100){
-                //$.get("http://cfg.dyndns.tv:5000/marknote/get_load",{"orderby":"time","offset":++current_page}).done(loadmore);
-                $.get("http://127.0.0.1:5000/marknote/get_load",{"orderby":"time","offset":++current_page}).done(loadmore);
-                $(".tohide").hide();
+            if(w.scrollTop()+w.height()>=d.height()){
+                //$.get("http://cfg.dyndns.tv:5000/marknote/load_data",{"orderby":{{orderby}},"offset":++current_page}).done(loadmore);
+                $.get("http://127.0.0.1:5000/marknote/load_data",{"orderby":orderby,"offset":++pageoffset}).done(loadmore);
             }
         }
         w.scroll(atbottom);
@@ -62,21 +64,21 @@
                     <div class="span1"><h5>order by</h5></div>
                     <div class="btn-toolbar span4">
                         <div class="btn-group">
-                            <button class="btn" onclick="location.href='/marknote/check_dec/{{curp}}'">time</button>
-                            <button class="btn" onclick="location.href='/marknote/title/{{page}}'">title</button>
-                            <button class="btn" onclick="location.href='/marknote/tag/{{page}}'">tag</button>
-                            <button class="btn" onclick="location.href='/marknote/random/{{page}}'">random</button>
+                            <button class="btn" onclick="location.href='/marknote/check_desc/{{page}}'">time</button>
+                            <button class="btn" onclick="location.href='/marknote/title/{{pinterval}}'">title</button>
+                            <button class="btn" onclick="location.href='/marknote/tag/{{pinterval}}'">tag</button>
+                            <button class="btn" onclick="location.href='/marknote/random/{{pinterval}}'">random</button>
                         </div>
                     </div>
                     <div class="pagination span5">
                         <ul>
-                        {% if page != 1%}
-                            <li><a href="/marknote/{{orderby}}/{{page-5}}">&lt&lt</a></li>
+                        {% if pinterval != 1%}
+                            <li><a href="/marknote/{{orderby}}/{{pinterval-5}}">&lt&lt</a></li>
                         {% endif %}
                         {% for p in range(5) %}
-                            <li><a href="/marknote/{{orderby}}/{{page+p}}">{{page+p}}</a></li>
+                            <li><a href="/marknote/{{orderby}}/{{pinterval+p}}">{{pinterval+p}}</a></li>
                         {% endfor %}
-                            <li><a href="/marknote/{{orderby}}/{{page+5}}">&gt&gt</a></li>
+                            <li><a href="/marknote/{{orderby}}/{{pinterval+5}}">&gt&gt</a></li>
                         </ul>
                     </div>
                 </div>
@@ -90,7 +92,7 @@
                             <h3>{{row.title}}</h3>
                             {% endif %}
 
-                            {% set tags = row.tag.split(',') %}
+                            {% set tags = row.tags.split(',') %}
                             <small>
                             {% if tags[0] != "" %}
                                 <a href="/marknote/tags/{{tags[0]}}">{{tags[0]}}</a>
@@ -105,26 +107,15 @@
                         {% set note = row.note.split("\n") %}
                         {% if note[0] != "" %}
                         <div id="collapse{{row.id}}" class="tohide">
-                            {% set isimg = False %}
                             {% set islink = False %}
-                            {% set imgn = 0 %}
                             {% set linkname = "" %}
-                            {% set imgs = row.img.split(',') %}
                             {% for a in note %}
-                                {% if '<img>' in a: %}
-                                    {% set isimg = True %}
-                                {% elif '</img>' in a: %}
-                                    {% set isimg = False %}
-                                {% elif '<link>' in a: %}
+                                {% if '<link>' in a: %}
                                     {% set islink = True %}
                                 {% elif '</link>' in a: %}
                                     {% set islink = False %}
                                 {% else : %}
-                                    {% if isimg : %}
-                                        <a href="{{url_for('static',filename='images/'+imgs[imgn])}}" target="_blank">
-                                        <img src="{{url_for('static',filename='images/'+imgs[imgn])}}" /></a><br />
-                                        {% set imgn = imgn+1 %}
-                                    {% elif islink : %}
+                                    {% if islink : %}
                                         {% if '|||' in a : %}
                                             <a href="{{a[a.find('http'):]}}" target="_blank" >{{a[0:a.find('|||')]}}</a><br />
                                         {% else %}
