@@ -62,6 +62,7 @@ def add_new():
         noteimg = url.procimgurl(item.id,imgurl)
         qu.query_update(MarkNote,item.id,{'img':noteimg})
 
+        print item
         print item.img
         for s in item.note.split("\n"):
             print s
@@ -210,3 +211,19 @@ def loadcopy():
 
     return redirect("/marknote/time/1")
 '''
+@app.route("/copy")
+def copy():
+    out = open("notedata/copydb",'w')
+    for r in qu.query(MarkNote,MarkNote.id):
+        print r
+        print r.title.encode('utf-8')
+        print r.tag.encode('utf-8')
+        out.write(r.title.encode('utf-8')+'\n')
+        out.write(r.link+'\n')
+        out.write(r.tag.encode('utf-8')+'\n')
+        out.write(r.note.encode('utf-8')+'\n###\n')
+        out.write(r.img+'\n')
+        out.write(str(r.time)+'\n')
+    return redirect('/marknote/time/1')
+   
+

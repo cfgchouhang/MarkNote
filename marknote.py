@@ -32,8 +32,9 @@ class MarkNote(Base):
         self.time = time
 
     def __repr__(self):
-        return "MarkNote title:%s|link:%s|tag:%s\nnote:%s\ntime:%s\n" %\
-                (self.title,self.link,self.tag,self.note,self.time)
+        return "title: "+self.title.encode('utf-8')+"|tags: "+self.tag.encode('utf-8')
+        #return "MarkNote title:%s|link:%s|tag:%s\nnote:%s\ntime:%s\n" %\
+        #        (self.title,self.link,self.tag,self.note,self.time)
 
     def add(self):
         session.add(self)
