@@ -1,0 +1,147 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>KeyNote</title>
+    <!-- Bootstrap -->
+    <link href="{{url_for('static',filename='bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" media="screen">
+    <style>
+        div#pageheader{
+            text-align: center;
+        }
+    </style>
+    <script type="text/javascript" src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='jquery-1.8.3.min.js')}}"></script>
+    <script type="text/javascript">
+        var w = $(window);
+        var d = $(document);
+        var pageoffset = {{page}};
+        var orderby = "{{orderby}}";
+
+        $(document).ready(function(){
+            $(".tohide").hide();
+        });
+        function unfold(collid){
+            $(collid).toggle(200);
+        }
+        function del_confirm(noteid){
+            var r=confirm("Sure to delete it?");
+            if(r){
+                location.href="/delete/"+noteid;
+            }
+        }
+        function loadmore(data){
+            $("#loadee").append(data);
+            $(".tohide").hide();
+        }
+        function atbottom(){
+            if(w.scrollTop()+w.height()>=d.height()){
+                //$.get("http://cfg.dyndns.tv:5000/marknote/load_data",{"orderby":{{orderby}},"offset":++current_page}).done(loadmore);
+                $.get("http://127.0.0.1:5000/marknote/load_data",{"orderby":orderby,"offset":++pageoffset}).done(loadmore);
+            }
+        }
+        w.scroll(atbottom);
+    </script>
+</head>
+<body>
+    <div class="page-header" id="pageheader" >
+            <h1>Simple bookmark and keynote</h1>
+    </div>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="span4">
+                <div>
+                    <button type="button" class="btn btn-primary btn-large" onclick="location.href='/add_page'">Add</button>
+                </div>
+                <br />
+                <div>
+                    <form action="/marknote/search" method="GET">
+                        <input type="text" placeholder="search" id="search" name="search">
+                    </form>
+                </div>
+            </div>
+            <div class="span10" id="loadee">
+                <div class="row">
+                    <div class="span1"><h5>order by</h5></div>
+                    <div class="btn-toolbar span4">
+                        <div class="btn-group">
+                            <button class="btn" onclick="location.href='/marknote/check_desc/{{page}}'">time</button>
+                            <button class="btn" onclick="location.href='/marknote/title/{{pinterval}}'">title</button>
+                            <button class="btn" onclick="location.href='/marknote/tag/{{pinterval}}'">tag</button>
+                            <button class="btn" onclick="location.href='/marknote/random/{{pinterval}}'">random</button>
+                        </div>
+                    </div>
+                    <div class="pagination span5">
+                        <ul>
+                        {% if pinterval != 1%}
+                            <li><a href="/marknote/{{orderby}}/{{pinterval-5}}">&lt&lt</a></li>
+                        {% endif %}
+                        {% for p in range(5) %}
+                            <li><a href="/marknote/{{orderby}}/{{pinterval+p}}">{{pinterval+p}}</a></li>
+                        {% endfor %}
+                            <li><a href="/marknote/{{orderby}}/{{pinterval+5}}">&gt&gt</a></li>
+                        </ul>
+                    </div>
+                </div>
+                {% for row in data %}
+                <div class="row">
+                    <div class="span8 well well-small" >
+                        <blockquote>
+                            {% if row.link != "" %}
+                            <h3><a href="{{row.link}}" target="_blank">{{row.title}}</a></h3>
+                            {% else %}
+                            <h3>{{row.title}}</h3>
+                            {% endif %}
+
+                            {% set tags = row.tags.split(',') %}
+                            <small>
+                            {% if tags[0] != "" %}
+                                <a href="/marknote/tags/{{tags[0]}}">{{tags[0]}}</a>
+                            {% endif %}
+                            {% for tag in tags[1:] %}
+                                {% if tag != '' %}
+                                 | <a href="/marknote/tags/{{tag}}">{{tag}}</a>
+                                {% endif %}
+                            {% endfor %}
+                            </small>
+                        </blockquote>
+                        {% set note = row.note.split("\n") %}
+                        {% if note[0] != "" %}
+                        <div id="collapse{{row.id}}" class="tohide">
+                            {% set islink = False %}
+                            {% set linkname = "" %}
+                            {% for a in note %}
+                                {% if '<link>' in a: %}
+                                    {% set islink = True %}
+                                {% elif '</link>' in a: %}
+                                    {% set islink = False %}
+                                {% else : %}
+                                    {% if islink : %}
+                                        {% if '|||' in a : %}
+                                            <a href="{{a[a.find('http'):]}}" target="_blank" >{{a[0:a.find('|||')]}}</a><br />
+                                        {% else %}
+                                            <a href="{{a}}" target="_blank" >link</a><br />
+                                        {% endif %}
+                                    {% else %}
+                                        {{a}}<br />
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                    </div>
+                    <div>
+                        <h5><img src="{{url_for('static',filename='more.png')}}" onclick="unfold('#collapse{{row.id}}')" /></h5>
+                    </div>
+                    <div>
+                        <h5><a href="/edit/{{row.id}}"><img src="{{url_for('static',filename='edit.png')}}" /></a></h5>
+                    </div>
+                    <div>
+                        <h5><img src="{{url_for('static',filename='trash.png')}}" onclick="del_confirm({{row.id}})" /></h5>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    </body>
+</html>
