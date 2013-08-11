@@ -14,13 +14,9 @@
     <script type="text/javascript">
         var w = $(window);
         var d = $(document);
-<<<<<<< HEAD:templates/main.html
-        var current_page = {{curp}};
-=======
         var pageoffset = {{page}};
         var orderby = "{{orderby}}";
 
->>>>>>> 63c8818f4b90a6fd4218a92bbe620c1bef240710:templates/index.html
         $(document).ready(function(){
             $(".tohide").hide();
         });
@@ -39,13 +35,8 @@
         }
         function atbottom(){
             if(w.scrollTop()+w.height()>=d.height()){
-<<<<<<< HEAD:templates/main.html
-                //$.get("http://cfg.dyndns.tv:5000/marknote/get_load",{"orderby":"time","offset":++current_page}).done(loadmore);
-                $.get("http://127.0.0.1:5000/marknote/get_load",{"orderby":"time","offset":++current_page}).done(loadmore);
-=======
                 //$.get("http://cfg.dyndns.tv:5000/marknote/load_data",{"orderby":{{orderby}},"offset":++current_page}).done(loadmore);
                 $.get("http://127.0.0.1:5000/marknote/load_data",{"orderby":orderby,"offset":++pageoffset}).done(loadmore);
->>>>>>> 63c8818f4b90a6fd4218a92bbe620c1bef240710:templates/index.html
             }
         }
         w.scroll(atbottom);
