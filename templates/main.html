@@ -14,7 +14,7 @@
     <script type="text/javascript">
         var w = $(window);
         var d = $(document);
-        var current_page = {{page}};
+        var current_page = {{curp}};
         $(document).ready(function(){
             $(".tohide").hide();
         });
@@ -29,12 +29,12 @@
         }
         function loadmore(data){
             $("#loadee").append(data);
+            $(".tohide").hide();
         }
         function atbottom(){
-            if(w.scrollTop()+w.height()>=d.height()-100){
+            if(w.scrollTop()+w.height()>=d.height()){
                 //$.get("http://cfg.dyndns.tv:5000/marknote/get_load",{"orderby":"time","offset":++current_page}).done(loadmore);
                 $.get("http://127.0.0.1:5000/marknote/get_load",{"orderby":"time","offset":++current_page}).done(loadmore);
-                $(".tohide").hide();
             }
         }
         w.scroll(atbottom);
