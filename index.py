@@ -6,7 +6,7 @@ from sqlalchemy import desc
 from init import app
 from query import Query
 from dbset import MarkNote,Tag,Relate
-from feature import add_new,add_page
+from feature import add_byurl
 
 qu = Query()
 global isdesc
@@ -34,8 +34,18 @@ def index(orderby,page):
     print(qu.count(MarkNote))
     
     pinterval = page-((page-1)%5)
-    return render_template('index.html',data=data,orderby=orderby,\
+    return render_template("index.html",data=data,orderby=orderby,\
                            pinterval=pinterval,page=page)
+
+@app.route("/marknote/add_page")
+def add_page():
+    return render_template("add_page.html")
+
+@app.route("/marknote/edit_page/<int:id>")
+def edit_page(id):
+    data = qu.query_byid(MarkNote,id).first()
+    print(data)
+    return render_template("edit_page.html",data=data)
 
 @app.route("/marknote/load_data",methods=["GET"])
 def load_data():

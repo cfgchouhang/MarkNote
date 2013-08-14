@@ -21,20 +21,20 @@
         function del_confirm(noteid){
             var r=confirm("Sure to delete it?");
             if(r){
-                location.href="/delete/"+noteid;
+                location.href="/marknote/delete/"+noteid;
             }
         }
     </script>
 </head>
 <body>
     <div id="set" class="container">
-    <form id="editform" name="editform" action="/update/{{data.id}}" method="POST">
+    <form id="editform" name="editform" action="/marknote/update/{{data.id}}" method="POST">
         <fieldset>
             <legend><h3>edit</h3></legend>
             <input class="input-xlarge" type="text" placeholder="title" id="title" name="title" value="{{data.title}}"><br/>
             <input class="input-xlarge" type="text" placeholder="the url" id="link" name="link" value="{{data.link}}"><br/>
             <span class="help-block"><h4>use ',' or blank to seperate tags</h4></span>
-            <input class="input-xlarge" type="text" placeholder="tags" id="tag" name="tag" value="{{data.tag}}"><br />
+            <input class="input-xlarge" type="text" placeholder="tags" id="tags" name="tags" value="{{data.tags}}"><br />
             <textarea class="input-xxlarge" placeholder="note can be omitted." rows="20" id="note" name="note">{{data.note}}</textarea><br/>
             <div class="row">
                 <button type="button" class="btn" onclick="check_validity()">Update</button>

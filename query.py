@@ -33,6 +33,7 @@ class Query:
         note = self.query_byid(MarkNote,id)
         for t in note.first().tags.split(','):
             if t != '':
+                print(t)
                 tag = self.query_bytitle(Tag,t)
                 self.delete_rel(id,tag)
         note.delete()

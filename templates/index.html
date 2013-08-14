@@ -26,7 +26,7 @@
         function del_confirm(noteid){
             var r=confirm("Sure to delete it?");
             if(r){
-                location.href="/delete/"+noteid;
+                location.href="/marknote/delete/"+noteid;
             }
         }
         function loadmore(data){
@@ -35,7 +35,6 @@
         }
         function atbottom(){
             if(w.scrollTop()+w.height()>=d.height()){
-                //$.get("http://cfg.dyndns.tv:5000/marknote/load_data",{"orderby":{{orderby}},"offset":++current_page}).done(loadmore);
                 $.get("http://127.0.0.1:5000/marknote/load_data",{"orderby":orderby,"offset":++pageoffset}).done(loadmore);
             }
         }
@@ -50,7 +49,7 @@
         <div class="row">
             <div class="span4">
                 <div>
-                    <button type="button" class="btn btn-primary btn-large" onclick="location.href='/add_page'">Add</button>
+                    <button type="button" class="btn btn-primary btn-large" onclick="location.href='/marknote/add_page'">Add</button>
                 </div>
                 <br />
                 <div>
@@ -59,7 +58,7 @@
                     </form>
                 </div>
                 <div>
-                    <button type="button" class="btn btn-success btn-large" onclick="location.href='/copy'">Copy</button>
+                    <button type="button" class="btn btn-success btn-large" onclick="location.href='/marknote/export'">EXPORT</button>
                 </div>
             </div>
             <div class="span10" id="loadee">
@@ -102,7 +101,7 @@
                             {% endif %}
                             {% for tag in tags[1:] %}
                                 {% if tag != '' %}
-                                 | <a href="/marknote/tags/{{tag}}">{{tag}}</a>
+                                , <a href="/marknote/tags/{{tag}}">{{tag}}</a>
                                 {% endif %}
                             {% endfor %}
                             </small>
@@ -111,7 +110,6 @@
                         {% if note[0] != "" %}
                         <div id="collapse{{row.id}}" class="tohide">
                             {% set islink = False %}
-                            {% set linkname = "" %}
                             {% for a in note %}
                                 {% if '<link>' in a: %}
                                     {% set islink = True %}
@@ -136,7 +134,7 @@
                         <h5><img src="{{url_for('static',filename='more.png')}}" onclick="unfold('#collapse{{row.id}}')" /></h5>
                     </div>
                     <div>
-                        <h5><a href="/edit/{{row.id}}"><img src="{{url_for('static',filename='edit.png')}}" /></a></h5>
+                        <h5><a href="/marknote/edit_page/{{row.id}}"><img src="{{url_for('static',filename='edit.png')}}" /></a></h5>
                     </div>
                     <div>
                         <h5><img src="{{url_for('static',filename='trash.png')}}" onclick="del_confirm({{row.id}})" /></h5>

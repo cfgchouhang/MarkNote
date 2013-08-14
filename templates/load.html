@@ -8,14 +8,14 @@
                             <h3>{{row.title}}</h3>
                             {% endif %}
 
-                            {% set tags = row.tag.split(',') %}
+                            {% set tags = row.tags.split(',') %}
                             <small>
                             {% if tags[0] != "" %}
                                 <a href="/marknote/tags/{{tags[0]}}">{{tags[0]}}</a>
                             {% endif %}
                             {% for tag in tags[1:] %}
                                 {% if tag != '' %}
-                                 | <a href="/marknote/tags/{{tag}}">{{tag}}</a>
+                                , <a href="/marknote/tags/{{tag}}">{{tag}}</a>
                                 {% endif %}
                             {% endfor %}
                             </small>
@@ -23,26 +23,14 @@
                         {% set note = row.note.split("\n") %}
                         {% if note[0] != "" %}
                         <div id="collapse{{row.id}}" class="tohide">
-                            {% set isimg = False %}
                             {% set islink = False %}
-                            {% set imgn = 0 %}
-                            {% set linkname = "" %}
-                            {% set imgs = row.img.split(',') %}
                             {% for a in note %}
-                                {% if '<img>' in a: %}
-                                    {% set isimg = True %}
-                                {% elif '</img>' in a: %}
-                                    {% set isimg = False %}
-                                {% elif '<link>' in a: %}
+                                {% if '<link>' in a: %}
                                     {% set islink = True %}
                                 {% elif '</link>' in a: %}
                                     {% set islink = False %}
                                 {% else : %}
-                                    {% if isimg : %}
-                                        <a href="{{url_for('static',filename='images/'+imgs[imgn])}}" target="_blank">
-                                        <img src="{{url_for('static',filename='images/'+imgs[imgn])}}" /></a><br />
-                                        {% set imgn = imgn+1 %}
-                                    {% elif islink : %}
+                                    {% if islink : %}
                                         {% if '|||' in a : %}
                                             <a href="{{a[a.find('http'):]}}" target="_blank" >{{a[0:a.find('|||')]}}</a><br />
                                         {% else %}

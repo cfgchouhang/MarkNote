@@ -13,6 +13,7 @@ class MarkNote(Base):
     tags = Column(String) 
     note = Column(Text)
     time = Column(DateTime)
+    #last_time = Column(DateTime)
 
     relates = relationship("Relate",order_by="Relate.id")
 
@@ -24,9 +25,11 @@ class MarkNote(Base):
         self.time = time
 
     def __repr__(self):
-        return "title: "+self.title.encode('utf-8')+"|tags: "+self.tag.encode('utf-8')
-        #return "MarkNote title:%s|link:%s|tag:%s\nnote:%s\ntime:%s\n" %\
-        #        (self.title,self.link,self.tag,self.note,self.time)
+        s = "id: "+str(self.id)+"|title: "+self.title.encode('utf-8')+"\n"
+        s += "tags: "+self.tags.encode('utf-8')+"\n"
+        s += "link: "+self.link.encode('utf-8')+"\n"
+        s += "note:\n"+self.note.encode('utf-8')+"\n"
+        return s
 
     def add(self):
         session.add(self)
@@ -46,9 +49,15 @@ class Tag(Base):
         self.title = title
         self.count = count
 
+    def __repr__(self):
+        s = "id: "+str(self.id)+"|title: "+self.title.encode('utf-8')
+        s += "|count: "+str(self.count)
+        return s
+
     def add(self):
         session.add(self)
         session.commit()
+
 
 class Relate(Base):
     __tablename__ = "Relate"
@@ -56,6 +65,11 @@ class Relate(Base):
     id = Column(Integer,primary_key=True)
     tagid = Column(Integer,ForeignKey("Tag.id"))
     marknoteid = Column(Integer,ForeignKey("MarkNote.id"))
+
+    def __repr__(self):
+        s = "id: "+str(self.id)+"|marknoteid: "+str(self.marknoteid)
+        s += "|tagid: "+str(self.tagid)
+        return s
 
     def add(self):
         session.add(self)
