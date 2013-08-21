@@ -55,7 +55,7 @@ def add(title,link,tags,note,time=datetime.now()):
         add_tags[tag] = False
     
     new_data.add()
-    print(new_data)
+    print("add new marknote:\n"+str(new_data))
 
 @app.route("/marknote/update/<int:id>",methods=["POST"])
 def update(id):
@@ -122,15 +122,17 @@ def test(num=0):
     notes = qu.query(MarkNote,MarkNote.id,num,0)
     tags = qu.query(Tag,Tag.id,num,0)
     rels = qu.query(Relate,Relate.id,num,0)
-    print("note--------------")
+    out = open("notedata/test",'w')
+    
+    out.write("note--------------\n")
     for a in notes:
-        print(a)
-    print("tag---------------")
+        out.write(str(a))
+    out.write("tag---------------\n")
     for b in tags:
-        print(b)
-    print("rel---------------")
+        out.write(str(b)+'\n')
+    out.write("rel---------------\n")
     for c in rels:
-        print(c)
+        out.write(str(c)+'\n')
     
 @app.route("/marknote/export")
 def export_db():

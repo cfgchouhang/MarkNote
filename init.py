@@ -14,3 +14,4 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 app = Flask(__name__)
+app.jinja_env.add_extension('jinja2.ext.loopcontrols')

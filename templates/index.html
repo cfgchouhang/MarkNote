@@ -96,11 +96,13 @@
 
                             {% set tags = row.tags.split(',') %}
                             <small>
-                            {% if tags[0] != "" %}
-                                <a href="/marknote/tags/{{tags[0]}}">{{tags[0]}}</a>
-                            {% endif %}
-                            {% for tag in tags[1:] %}
-                                {% if tag != '' %}
+                            {% set first = True %}
+                            {% for tag in tags %}
+                                {% if tag == '' %}{% continue %}{% endif %}
+                                {% if first %}
+                                <a href="/marknote/tags/{{tag}}">{{tag}}</a>
+                                {% set first = False %}
+                                {% elif not first %}
                                 , <a href="/marknote/tags/{{tag}}">{{tag}}</a>
                                 {% endif %}
                             {% endfor %}
@@ -111,13 +113,13 @@
                         <div id="collapse{{row.id}}" class="tohide">
                             {% set islink = False %}
                             {% for a in note %}
-                                {% if '<link>' in a: %}
+                                {% if '<link>' in a %}
                                     {% set islink = True %}
-                                {% elif '</link>' in a: %}
+                                {% elif '</link>' in a %}
                                     {% set islink = False %}
-                                {% else : %}
-                                    {% if islink : %}
-                                        {% if '|||' in a : %}
+                                {% else %}
+                                    {% if islink %}
+                                        {% if '|||' in a %}
                                             <a href="{{a[a.find('http'):]}}" target="_blank" >{{a[0:a.find('|||')]}}</a><br />
                                         {% else %}
                                             <a href="{{a}}" target="_blank" >link</a><br />
