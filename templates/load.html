@@ -48,7 +48,7 @@
                         <h5><img src="{{url_for('static',filename='more.png')}}" onclick="unfold('#collapse{{row.id}}')" /></h5>
                     </div>
                     <div>
-                        <h5><a href="/edit/{{row.id}}"><img src="{{url_for('static',filename='edit.png')}}" /></a></h5>
+                        <h5><a href="/marknote/edit_page/{{row.id}}"><img src="{{url_for('static',filename='edit.png')}}" /></a></h5>
                     </div>
                     <div>
                         <h5><img src="{{url_for('static',filename='trash.png')}}" onclick="del_confirm({{row.id}})" /></h5>
