@@ -6,7 +6,8 @@ from sqlalchemy import desc
 from init import app
 from query import Query
 from dbset import MarkNote,Tag,Relate
-from feature import add_byurl
+import feature
+import facebook
 
 qu = Query()
 global isdesc
@@ -47,11 +48,20 @@ def edit_page(id):
     print(data)
     return render_template("edit_page.html",data=data)
 
+@app.route("/marknote/tags/<tag>")
+def tag_page(tag):
+    tagid = qu.query_bytitle(Tag,tag).first().id
+    rel = qu.query(Relate,Relate.id).filter(Relate.tagid==tagid)
+    data = []
+    for i in rel:
+        data += [qu.query_byid(MarkNote,i.marknoteid).first()]
+
+    return render_template("tag_page.html",tag=tag,data=data)
+
 @app.route("/marknote/load_data",methods=["GET"])
 def load_data():
     offset = request.args.get("offset")
     orderby = request.args.get("orderby")
-    print(int(offset),orderby)
     if orderby == "random":
         return render_template("load.html",data="")
     data = get_data(orderby,int(offset))
@@ -80,5 +90,6 @@ def get_data(orderby="time",page=1):
 
 if __name__=='__main__':
     app.debug = True
-    app.run(host='127.0.0.1')
+    #app.run(host='127.0.0.1')
+    app.run(host='192.168.1.2')
 

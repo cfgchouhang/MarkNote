@@ -17,32 +17,13 @@
     </style>
     <script type="text/javascript" src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
     <script type="text/javascript" src="{{url_for('static',filename='jquery-1.10.2.min.js')}}"></script>
-    <script src="http://w3resource.com/twitter-bootstrap/twitter-bootstrap-v2/js/bootstrap-tooltip.js"></script>
-    <script src="http://w3resource.com/twitter-bootstrap/twitter-bootstrap-v2/js/bootstrap-popover.js"></script>
-
     <script type="text/javascript">
-        var w = $(window);
-        var d = $(document);
-        var pageoffset = {{page}};
-        var orderby = "{{orderby}}";
         var islink = false;
 
         $(document).ready(function(){
-            $(".tohide").hide();
+            $('.tohide').hide();
         });
 
-        function pop_over(shareid){
-            $(shareid).popover("toggle");
-        }
-
-        function unfold(collid){
-            if(islink){
-                islink = false;
-                return;
-            }
-            $(collid).toggle(200);
-        }
-        
         function del_confirm(noteid){
             var r=confirm("Sure to delete it?");
             if(r){
@@ -50,24 +31,18 @@
             }
         }
 
-        function loadmore(data){
-            $("#loadee").append(data);
-            $(".tohide").hide();
-        }
-
-        function at_bottom(){
-            if(w.scrollTop()+w.height()>=d.height()){
-                $.get("http://cfg.dyndns.tv:5000/marknote/load_data",{"orderby":orderby,"offset":++pageoffset}).done(loadmore);
-                //$.get("http://127.0.0.1:5000/marknote/load_data",{"orderby":orderby,"offset":++pageoffset}).done(loadmore);
+        function unfold(colid){
+            if(islink){
+                islink = false;
+                return;
             }
+            $(colid).toggle(300);
         }
 
         function click_link(){
             islink = true;
         }
         
-        w.scroll(at_bottom);
-
     </script>
 </head>
 <body>
@@ -99,24 +74,11 @@
          js.src = "//connect.facebook.net/en_US/all.js";
          ref.parentNode.insertBefore(js, ref);
         }(document));
-
-
     </script>
-    <script>
-        (function(d,s,id){
-            var js,fjs=d.getElementsByTagName(s)[0];
-            if(!d.getElementById(id)){
-                js=d.createElement(s);
-                js.id=id;
-                js.src="https://platform.twitter.com/widgets.js";
-                fjs.parentNode.insertBefore(js,fjs);
-            }
-        }(document,"script","twitter-wjs"));
-    </script>
-    <div class="page-header" id="pageheader">
-            <h1>Simple bookmark and keynote</h1>
+
+    <div class="page-header" id="pageheader" >
+        <h1>{{tag}}</h1>
     </div>
-
     <div class="container-fluid">
         <div class="row" id="main">
             <div class="span2">
@@ -127,40 +89,18 @@
                 <div>
                     <button type="button" class="btn btn-primary btn-large" onclick="location.href='/marknote/add_page'">Add</button>
                 </div>
-                <br />
-                <div>
-                    <button type="button" class="btn btn-success btn-large" onclick="location.href='/marknote/export'">EXPORT</button>
-                </div>
             </div>
-            <div class="span8" id="loadee">
-                <div class="row">
-                    <div class="span1"><h5>order by</h5></div>
-                    <div class="btn-toolbar span3">
-                        <div class="btn-group">
-                            <button class="btn" onclick="location.href='/marknote/check_desc/{{page}}'">time</button>
-                            <button class="btn" onclick="location.href='/marknote/title/{{pinterval}}'">title</button>
-                            <button class="btn" onclick="location.href='/marknote/random/{{pinterval}}'">random</button>
-                        </div>
-                    </div>
-                    <div class="pagination span4">
-                        <ul>
-                        {% if pinterval != 1 %}
-                            <li><a href="/marknote/{{orderby}}/{{pinterval-5}}">&lt&lt</a></li>
-                        {% endif %}
-                        {% for p in range(5) %}
-                            <li><a href="/marknote/{{orderby}}/{{pinterval+p}}">{{pinterval+p}}</a></li>
-                        {% endfor %}
-                            <li><a href="/marknote/{{orderby}}/{{pinterval+5}}">&gt&gt</a></li>
-                        </ul>
-                    </div>
+            <div class="span8">
+                <div>
+                    <button class="btn" onclick="history.back();">Back</button>
                 </div>
-                
+                <br />
                 {% for row in data %}
                 <div class="row">
-                    <div class="span7 well well-small">
-                        <blockquote onclick="unfold('#collapse{{row.id}}');">
+                    <div class="span7 well well-small" >
+                        <blockquote onclick="unfold('#collapse{{row.id}}')">
                             {% if row.link != "" %}
-                            <h3><a href="{{row.link}}" target="_blank" onclick="click_link()">{{row.title}}</a></h3>
+                            <h3><a href="{{row.link}}" onclick="click_link();" target="_blank">{{row.title}}</a></h3>
                             {% else %}
                             <h3>{{row.title}}</h3>
                             {% endif %}
@@ -188,7 +128,7 @@
                                         {% if '|||' in a %}
                                             <a href="{{a[a.find('http'):]}}" target="_blank" >{{a[0:a.find('|||')]}}</a><br />
                                         {% else %}
-                                            <a href="{{a}}" target="_blank">link</a><br />
+                                            <a href="{{a}}" target="_blank" >link</a><br />
                                         {% endif %}
                                     {% else %}
                                         {{a}}<br />
@@ -221,7 +161,7 @@
                             <h5><a href="/marknote/edit_page/{{row.id}}"><img src="{{url_for('static',filename='images/edit.png')}}" /></a></h5>
                         </div>
                         <div>
-                            <a href="#" onclick="del_confirm({{row.id}}); return false;"><img src="{{url_for('static',filename='images/trash.png')}}" /></a>
+                            <h5><img src="{{url_for('static',filename='images/trash.png')}}" onclick="del_confirm({{row.id}})" /></h5>
                         </div>
                     </div>
                 </div>
@@ -234,11 +174,11 @@
                 <br />
                 <div>
                     <form action="/marknote/search" method="GET">
-                        <input type="text" placeholder="search" id="term" name="term">
+                        <input type="text" placeholder="search" id="term" name="term" value="{{text}}">
                     </form>
                 </div>
             </div>
         </div>
     </div>
-    </body>
+</body>
 </html>

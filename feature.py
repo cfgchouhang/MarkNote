@@ -14,17 +14,17 @@ def add_byurl():
         return redirect(url_for("redir"))
     for key in form.keys():
         new_data[key] = form[key]
-
+    new_data['time'] = datetime.now()
     add(**new_data)
     return redirect("/marknote/time/1")
 
-def add(title,link,tags,note,time=datetime.now()):
+def add(title,link,tags,note,time):
     tags = tags.replace(' ','')
+    tags = tags.strip(',')
     if title=='':
         title = "untitle"
     if tags=='':
         tags = "untag"
-    
     new_data = MarkNote(title,link,tags,note,time)
     add_tags = {}
     for t in tags.split(','):
@@ -66,6 +66,7 @@ def update(id):
     for key in form.keys():
         new[key] = form[key]
     new["tags"] = new["tags"].replace(' ','')
+    new["tags"] = new["tags"].strip(',')
     if new["title"] == '':
         new["title"] = "untitle"
     if new["tags"] == '':
@@ -107,10 +108,28 @@ def update(id):
 
     return redirect("/marknote/time/1")
 
+@app.route("/marknote/search",methods=["GET"])
+def search():
+    s = request.args.get("term").strip(' ')
+    term = s
+    op = ""
+    if '|' in s:
+        op = s[s.rfind('|'):]
+        term = s[:s.rfind('|')].strip(' ')
+
+    if "all" in op:
+        data = qu.search(term,findall=True)
+    elif "tags:" in op:
+        tags = op[op.find("tags:")+5:]
+        data = qu.search(term,withtags=tags.replace(' ',''))
+    else:
+        data = qu.search(term)
+
+    return render_template("search_page.html",data=data,term=term,options=op[1:],text=s)
+
 @app.route("/marknote/delete/<int:id>")
 def delete(id):
     qu.delete(id)
-    test()
     return redirect("/marknote/time/1")
 
 @app.route("/marknote/test/<int:num>")
@@ -136,7 +155,7 @@ def test(num=0):
     
 @app.route("/marknote/export")
 def export_db():
-    out_data = open("notedata/exportdbtest",'w')
+    out_data = open("notedata/exportdb",'w')
     for note in qu.query(MarkNote,MarkNote.id):
         out_data.write(note.title.encode('utf-8')+'\n')
         out_data.write(note.link+'\n')

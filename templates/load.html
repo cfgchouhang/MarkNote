@@ -1,23 +1,20 @@
                 {% for row in data %}
                 <div class="row">
-                    <div class="span8 well well-small" >
-                        <blockquote>
+                    <div class="span7 well well-small">
+                        <blockquote onclick="unfold('#collapse{{row.id}}')">
                             {% if row.link != "" %}
-                            <h3><a href="{{row.link}}" target="_blank">{{row.title}}</a></h3>
+                            <h3><a href="{{row.link}}" target="_blank" onclick="click_link();">{{row.title}}</a></h3>
                             {% else %}
                             <h3>{{row.title}}</h3>
                             {% endif %}
 
                             {% set tags = row.tags.split(',') %}
                             <small>
-                            {% if tags[0] != "" %}
-                                <a href="/marknote/tags/{{tags[0]}}">{{tags[0]}}</a>
-                            {% endif %}
-                            {% for tag in tags[1:] %}
-                                {% if tag != '' %}
-                                , <a href="/marknote/tags/{{tag}}">{{tag}}</a>
-                                {% endif %}
+                            {% for tag in tags[:-1] %}
+                                {% if tag == '' %}{% continue %}{% endif %}
+                                <a href="/marknote/tags/{{tag}}">{{tag}}</a>,
                             {% endfor %}
+                                <a href="/marknote/tags/{{tags[-1]}}">{{tags[-1]}}</a>
                             </small>
                         </blockquote>
                         {% set note = row.note.split("\n") %}
@@ -44,14 +41,31 @@
                         </div>
                         {% endif %}
                     </div>
-                    <div>
-                        <h5><img src="{{url_for('static',filename='more.png')}}" onclick="unfold('#collapse{{row.id}}')" /></h5>
-                    </div>
-                    <div>
-                        <h5><a href="/marknote/edit_page/{{row.id}}"><img src="{{url_for('static',filename='edit.png')}}" /></a></h5>
-                    </div>
-                    <div>
-                        <h5><img src="{{url_for('static',filename='trash.png')}}" onclick="del_confirm({{row.id}})" /></h5>
+                    <div class="row-span1">
+                        <div>
+                            <a href="#" id="share{{row.id}}" onclick="pop_over('#share{{row.id}}'); return false;"
+                               data-trigger="click" data-placement="right" data-html="true"
+                               data-content="<a href=&quot;#&quot; onclick=&quot;window.open(
+                                    'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('{{row.link}}'), 
+                                    'facebook-share-dialog', 
+                                    'width=626,height=436'); 
+                                    return false;&quot;>
+                                    <img src=&quot;{{url_for('static',filename='images/facebook.png')}}&quot; /></a>
+                                    <a href=&quot;#&quot; onclick=&quot;window.open(
+                                    'https://twitter.com/intent/tweet?url='+encodeURIComponent('{{row.link}}'),
+                                    'twitter-tweet','width=640,height=257');return false;&quot;
+                                    class=&quot;twitter-share-button&quot;
+                                    >
+                                    <img src=&quot;{{url_for('static',filename='images/twitter.png')}}&quot; /></a>
+                                    ">
+                               <img src="{{url_for('static',filename='images/share.png')}}"/></a>
+                        </div>
+                        <div>
+                            <h5><a href="/marknote/edit_page/{{row.id}}"><img src="{{url_for('static',filename='images/edit.png')}}" /></a></h5>
+                        </div>
+                        <div>
+                            <h5><img src="{{url_for('static',filename='images/trash.png')}}" onclick="del_confirm({{row.id}})" /></h5>
+                        </div>
                     </div>
                 </div>
                 {% endfor %}

@@ -29,6 +29,7 @@ class MarkNote(Base):
         s += "tags: "+self.tags.encode('utf-8')+"\n"
         s += "link: "+self.link.encode('utf-8')+"\n"
         s += "note:\n"+self.note.encode('utf-8')+"\n"
+        s += "time: "+str(self.time)
         return s
 
     def add(self):

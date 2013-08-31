@@ -4,7 +4,9 @@ from sqlalchemy import or_,and_
 
 class Query:
     def query(self,table,order,num=0,offset=0):
-        data = session.query(table).order_by(order).offset(offset)
+        data = session.query(table).order_by(order)
+        if offset!=0:
+            data = data.offset(offset)
         if num!=0:
             return data.limit(num)
         return data
@@ -31,13 +33,61 @@ class Query:
             
     def delete(self,id):
         note = self.query_byid(MarkNote,id)
+        tags = {}
         for t in note.first().tags.split(','):
             if t != '':
-                print(t)
-                tag = self.query_bytitle(Tag,t)
-                self.delete_rel(id,tag)
+                tags[t] = t
+        for t in tags.keys():
+            print("tag:"+t)
+            tag = self.query_bytitle(Tag,t)
+            self.delete_rel(id,tag)
         note.delete()
         session.commit()
     
+    def search(self,term,withtags="",findall=False):
+        if withtags != "":
+            notes = session.query(MarkNote).filter(
+                        MarkNote.title.like('%'+term+'%'))
+            note = []
+            notag = False
+            for i in notes:
+                fit = False
+                rel = self.query(Relate,Relate.id).filter(
+                            Relate.marknoteid==i.id)
+
+                for tag in withtags.split(','):
+                    try:
+                        tagid = self.query_bytitle(Tag,tag).first().id
+                    except:
+                        notag = True
+                        break
+
+                    for j in rel:
+                        if j.tagid == tagid:
+                            fit = True
+                            break
+                    else:
+                        fit = False
+
+                    if not fit:
+                        break
+
+                if fit:
+                    note += [i]
+
+                if notag:
+                    del note[:]
+                    break
+
+        elif findall:
+            note = session.query(MarkNote).filter(
+                        or_(MarkNote.tags.like('%'+term+'%'),
+                        MarkNote.title.like('%'+term+'%')))
+        else:
+            note = session.query(MarkNote).filter(
+                        MarkNote.title.like('%'+term+'%'))
+
+        return note
+
     def count(self,table):
         return session.query(table).count()
