@@ -3,6 +3,7 @@ from dbset import MarkNote,Tag,Relate
 from query import Query
 from flask import request,redirect,render_template,url_for
 from datetime import datetime
+from urllib import quote_plus
 
 qu = Query()
 
@@ -57,7 +58,7 @@ def add(title,link,tags,note,time):
     new_data.add()
     print("add new marknote:\n"+str(new_data))
 
-@app.route("/marknote/update/<int:id>",methods=["POST"])
+@app.route("/marknote/update/<int:id>",methods=["GET","POST"])
 def update(id):
     form = request.form
     new = {}
@@ -106,7 +107,8 @@ def update(id):
     #new["last_time"] = datetime.now()
     qu.query_update(MarkNote,id,new)
 
-    return redirect("/marknote/time/1")
+    next_url = request.args.get("next")
+    return redirect(next_url)
 
 @app.route("/marknote/search",methods=["GET"])
 def search():
@@ -125,7 +127,9 @@ def search():
     else:
         data = qu.search(term)
 
-    return render_template("search_page.html",data=data,term=term,options=op[1:],text=s)
+    return render_template("search_page.html",data=data,
+           term=term,options=op[1:],text=s,
+           current_url=quote_plus(url_for("search",term=s)))
 
 @app.route("/marknote/delete/<int:id>")
 def delete(id):

@@ -1,13 +1,13 @@
 #!/usr/bin/env python
 from flask import request,redirect,url_for
 from flask import redirect,render_template
+from urllib import quote_plus
 from sqlalchemy.sql.expression import func
 from sqlalchemy import desc
 from init import app
 from query import Query
 from dbset import MarkNote,Tag,Relate
 import feature
-import facebook
 
 qu = Query()
 global isdesc
@@ -35,8 +35,10 @@ def index(orderby,page):
     print(qu.count(MarkNote))
     
     pinterval = page-((page-1)%5)
-    return render_template("index.html",data=data,orderby=orderby,\
-                           pinterval=pinterval,page=page)
+    return render_template("index.html",data=data,orderby=orderby,
+           pinterval=pinterval,page=page,
+           current_url=quote_plus(url_for("index",orderby=orderby,
+                                  page=page)))
 
 @app.route("/marknote/add_page")
 def add_page():
@@ -56,7 +58,8 @@ def tag_page(tag):
     for i in rel:
         data += [qu.query_byid(MarkNote,i.marknoteid).first()]
 
-    return render_template("tag_page.html",tag=tag,data=data)
+    return render_template("tag_page.html",tag=tag,data=data,
+           current_url=quote_plus(url_for("tag_page",tag=tag)))
 
 @app.route("/marknote/load_data",methods=["GET"])
 def load_data():
@@ -65,7 +68,9 @@ def load_data():
     if orderby == "random":
         return render_template("load.html",data="")
     data = get_data(orderby,int(offset))
-    return render_template("load.html",data=data)
+    return render_template("load.html",data=data,
+           current_url=quote_plus(url_for("index",orderby=orderby,
+                                  page=1)))
 
 def get_data(orderby="time",page=1):
     global isdesc

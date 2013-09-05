@@ -1,7 +1,8 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>KeyNote</title>
+    <title>MarkNote</title>
+    <link rel="icon" type="image/vnd.microsoft.icon" href="{{url_for('static',filename='images/favicon.ico')}}" />
     <!-- Bootstrap -->
     <link href="{{url_for('static',filename='bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" media="screen">
     <style>
@@ -14,8 +15,12 @@
         margin: 0 auto -60px;
     }
     </style>
+    <script type="text/javascript" src="{{url_for('static',filename='jquery-1.10.2.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
     <script type="text/javascript">
-        function check_validity(){
+        function add_next(){
+            document.editform.action += '?'+document.URL.slice(document.URL.search("next"));
+            console.log(document.editform.action);
             document.editform.submit();
         }
         function del_confirm(noteid){
@@ -37,12 +42,10 @@
             <input class="input-xlarge" type="text" placeholder="tags" id="tags" name="tags" value="{{data.tags}}"><br />
             <textarea class="input-xxlarge" placeholder="note can be omitted." rows="20" id="note" name="note">{{data.note}}</textarea><br/>
             <div class="row">
-                <button type="button" class="btn" onclick="check_validity()">Update</button>
+                <button type="button" class="btn" onclick="add_next()">Update</button>
                 <button type="button" class="btn btn-danger" onclick="del_confirm({{data.id}})">Delete</button>
             </div>
         </fieldset>
     </form>
-    <script type="text/javascript" src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
-    <script type="text/javascript" src="{{url_for('static',filename='jquery-1.8.3.min.js')}}"></script>
 </body>
 </html>

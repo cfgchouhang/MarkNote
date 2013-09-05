@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>KeyNote</title>
+    <title>MarkNote</title>
     <link rel="icon" type="image/vnd.microsoft.icon" href="{{url_for('static',filename='images/favicon.ico')}}" />
     <!-- Bootstrap -->
     <link href="{{url_for('static',filename='bootstrap/css/bootstrap.min.css')}}" rel="stylesheet" media="screen">
@@ -15,8 +15,8 @@
             margin-right: auto;
         }
     </style>
-    <script type="text/javascript" src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
     <script type="text/javascript" src="{{url_for('static',filename='jquery-1.10.2.min.js')}}"></script>
+    <script type="text/javascript" src="{{url_for('static',filename='bootstrap/js/bootstrap.min.js')}}"></script>
     <script type="text/javascript">
         var islink = false;
 
@@ -42,38 +42,50 @@
         function click_link(){
             islink = true;
         }
-        
     </script>
 </head>
 <body>
+    <!-- Facebook -->
     <div id="fb-root"></div>
     <script>
         window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '635660229802178', // App ID
-          status     : true, // check login status
-          cookie     : true, // enable cookies to allow the server to access the session
-          xfbml      : true  // parse XFBML
-        });
+            FB.init({
+                appId      : '635660229802178', // App ID
+                status     : true, // check login status
+                cookie     : true, // enable cookies to allow the server to access the session
+                xfbml      : true  // parse XFBML
+            });
 
-        FB.Event.subscribe('auth.authResponseChange', function(response) {
-          if(response.status === 'connected') {
-            FB.api('/me');
-          }
-          else{
-            FB.login();
-          }
-        });
+            FB.Event.subscribe('auth.authResponseChange', function(response) {
+                if(response.status === 'connected') {
+                    FB.api('/me');
+                }
+                else{
+                    FB.login();
+                }
+            });
         };
 
         // Load the SDK asynchronously
         (function(d){
-         var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement('script'); js.id = id; js.async = true;
-         js.src = "//connect.facebook.net/en_US/all.js";
-         ref.parentNode.insertBefore(js, ref);
+            var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+            if (d.getElementById(id)) {return;}
+            js = d.createElement('script'); js.id = id; js.async = true;
+            js.src = "//connect.facebook.net/en_US/all.js";
+            ref.parentNode.insertBefore(js, ref);
         }(document));
+    </script>
+    <!-- Twitter -->
+    <script>
+        (function(d,s,id){
+            var js,fjs=d.getElementsByTagName(s)[0];
+            if(!d.getElementById(id)){
+                js=d.createElement(s);
+                js.id=id;
+                js.src="https://platform.twitter.com/widgets.js";
+                fjs.parentNode.insertBefore(js,fjs);
+            }
+        }(document,"script","twitter-wjs"));
     </script>
 
     <div class="page-header" id="pageheader" >
@@ -109,9 +121,9 @@
                             <small>
                             {% for tag in tags[:-1] %}
                                 {% if tag == '' %}{% continue %}{% endif %}
-                                <a href="/marknote/tags/{{tag}}">{{tag}}</a>,
+                                <a href="/marknote/tags/{{tag}}" onclick="click_link();">{{tag}}</a>,
                             {% endfor %}
-                                <a href="/marknote/tags/{{tags[-1]}}">{{tags[-1]}}</a>
+                                <a href="/marknote/tags/{{tags[-1]}}" onclick="click_link();">{{tags[-1]}}</a>
                             </small>
                         </blockquote>
                         {% set note = row.note.split("\n") %}
@@ -140,28 +152,27 @@
                     </div>
                     <div class="row-span1">
                         <div>
-                            <a href="#" id="share{{row.id}}" onclick="pop_over('#share{{row.id}}'); return false;"
-                               data-trigger="click" data-placement="right" data-html="true"
+                            <a href="#" id="share{{row.id}}"
+                               onclick="return false;"
+                               data-toggle="popover" data-placement="right" data-html="true"
                                data-content="<a href=&quot;#&quot; onclick=&quot;window.open(
                                     'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent('{{row.link}}'), 
-                                    'facebook-share-dialog', 
-                                    'width=626,height=436'); 
-                                    return false;&quot;>
+                                    'facebook-share-dialog', 'width=626,height=436'); return false;&quot;>
                                     <img src=&quot;{{url_for('static',filename='images/facebook.png')}}&quot; /></a>
                                     <a href=&quot;#&quot; onclick=&quot;window.open(
                                     'https://twitter.com/intent/tweet?url='+encodeURIComponent('{{row.link}}'),
-                                    'twitter-tweet','width=640,height=257');return false;&quot;
-                                    class=&quot;twitter-share-button&quot;
-                                    >
-                                    <img src=&quot;{{url_for('static',filename='images/twitter.png')}}&quot; /></a>
-                                    ">
-                               <img src="{{url_for('static',filename='images/share.png')}}"/></a>
+                                    'twitter-tweet', 'width=640,height=257');return false;&quot;
+                                    class=&quot;twitter-share-button&quot;>
+                                    <img src=&quot;{{url_for('static',filename='images/twitter.png')}}&quot; /></a>">
+                            <img src="{{url_for('static',filename='images/share.png')}}"/></a>
+                            <script type="text/javascript">$("#share{{row.id}}").popover();</script>
                         </div>
                         <div>
-                            <h5><a href="/marknote/edit_page/{{row.id}}"><img src="{{url_for('static',filename='images/edit.png')}}" /></a></h5>
+                            <h5><a href="/marknote/edit_page/{{row.id}}?next={{current_url}}">
+                            <img src="{{url_for('static',filename='images/edit.png')}}" /></a></h5>
                         </div>
                         <div>
-                            <h5><img src="{{url_for('static',filename='images/trash.png')}}" onclick="del_confirm({{row.id}})" /></h5>
+                            <a href="#" onclick="del_confirm({{row.id}}); return false;"><img src="{{url_for('static',filename='images/trash.png')}}" /></a>
                         </div>
                     </div>
                 </div>
@@ -174,7 +185,7 @@
                 <br />
                 <div>
                     <form action="/marknote/search" method="GET">
-                        <input type="text" placeholder="search" id="term" name="term" value="{{text}}">
+                        <input type="text" placeholder="search" id="term" name="term">
                     </form>
                 </div>
             </div>
