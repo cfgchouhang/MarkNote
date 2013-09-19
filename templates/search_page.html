@@ -35,7 +35,7 @@
         function del_confirm(noteid){
             var r=confirm("Sure to delete it?");
             if(r){
-                location.href="/marknote/delete/"+noteid;
+                location.href="/marknote/delete/"+noteid+"?next={{current_url}}";
             }
         }
 
@@ -160,7 +160,12 @@
                                     'https://twitter.com/intent/tweet?url='+encodeURIComponent('{{row.link}}'),
                                     'twitter-tweet', 'width=640,height=257');return false;&quot;
                                     class=&quot;twitter-share-button&quot;>
-                                    <img src=&quot;{{url_for('static',filename='images/twitter.png')}}&quot; /></a>">
+                                    <img src=&quot;{{url_for('static',filename='images/twitter.png')}}&quot; /></a>
+                                    <a href=&quot;#&quot; onclick=&quot;window.open(
+                                    'https://plus.google.com/share?url='+encodeURIComponent('{{row.link}}'),
+                                    '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;&quot;>
+                                    <img src=&quot;{{url_for('static',filename='images/gplus.png')}}&quot; /></a>
+                                    ">
                             <img src="{{url_for('static',filename='images/share.png')}}"/></a>
                             <script type="text/javascript">$("#share{{row.id}}").popover();</script>
                         </div>

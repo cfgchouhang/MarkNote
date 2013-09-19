@@ -1,4 +1,4 @@
-from init import app 
+from init import app,status
 from dbset import MarkNote,Tag,Relate
 from query import Query
 from flask import request,redirect,render_template,url_for
@@ -131,14 +131,17 @@ def search():
            term=term,options=op[1:],text=s,
            current_url=quote_plus(url_for("search",term=s)))
 
-@app.route("/marknote/delete/<int:id>")
+@app.route("/marknote/delete/<int:id>",methods=["GET"])
 def delete(id):
-    qu.delete(id)
-    return redirect("/marknote/time/1")
+    if status.auth == 0:
+        qu.delete(id)
+    next_url = request.args.get("next")
+    return redirect(next_url)
 
 @app.route("/marknote/test/<int:num>")
 def test_byurl(num=0):
-    test(num)
+    if status.auth == 0:
+        test(num)
     return redirect("/marknote/time/1")
 
 def test(num=0):
@@ -159,6 +162,9 @@ def test(num=0):
     
 @app.route("/marknote/export")
 def export_db():
+    if status.auth != 0:
+        return redirect("/marknote/time/1")
+
     out_data = open("notedata/exportdb",'w')
     for note in qu.query(MarkNote,MarkNote.id):
         out_data.write(note.title.encode('utf-8')+'\n')
@@ -170,6 +176,9 @@ def export_db():
 
 @app.route("/marknote/import")
 def import_db():
+    if status.auth != 0:
+        return redirect("/marknote/time/1")
+
     count = 0
     data = {}
     for line in open("notedata/exportdb",'r'):

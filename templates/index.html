@@ -39,7 +39,7 @@
         function del_confirm(noteid){
             var r=confirm("Sure to delete it?");
             if(r){
-                location.href="/marknote/delete/"+noteid;
+                location.href="/marknote/delete/"+noteid+"?next={{current_url}}";
             }
         }
 
@@ -59,6 +59,15 @@
             islink = true;
         }
         
+        function check_session(fb_id){
+            if(fb_id !== "unknown"){
+                console.log(fb_id);
+                $.get("https://graph.facebook.com/"+fb_id,{"fields":"name"},function(data){
+                    console.log(data.name);
+                    $("#fb_div").append("<br />"+data.name);
+                });
+            }
+        }
         w.scroll(at_bottom);
     </script>
 </head>
@@ -66,6 +75,7 @@
     <!-- Facebook -->
     <div id="fb-root"></div>
     <script>
+        var fb_access = "{{fb_access}}"
         window.fbAsyncInit = function() {
             FB.init({
                 appId      : '635660229802178', // App ID
@@ -73,6 +83,8 @@
                 cookie     : true, // enable cookies to allow the server to access the session
                 xfbml      : true  // parse XFBML
             });
+            
+            check_session(fb_access);
 
             FB.Event.subscribe('auth.authResponseChange', function(response) {
                 if(response.status === 'connected') {
@@ -80,6 +92,28 @@
                 }
                 else{
                     FB.login();
+                }
+            });
+
+            FB.getLoginStatus(function(response){
+                if(response.status === 'connected'){
+                    console.log("login");
+                    //FB.api("/me");
+                    $.post("http://cfg.dyndns.tv:5000/marknote/authenticate",
+                           {"token":response.authResponse.accessToken,"status":"connected",
+                            "fb_id":response.authResponse.userID});
+                }
+                else if(response.status === 'not_authorized'){
+                    console.log("not connect app");
+                    $("#fb_div").append('<fb:login-button width="200" max-rows="1"></fb:login-button>');
+                    $.post("http://cfg.dyndns.tv:5000/marknote/authenticate",
+                           {"token":"not_connected","status":"not_connected","fb_id":"not_connected"});
+                }
+                else{
+                    console.log("not login");
+                    $("#fb_div").append('<fb:login-button width="200" max-rows="1"></fb:login-button>');
+                    $.post("http://cfg.dyndns.tv:5000/marknote/authenticate",
+                           {"token":"unknown","status":"unknown","fb_id":"unknown"});
                 }
             });
         };
@@ -200,10 +234,16 @@
                                     'facebook-share-dialog', 'width=626,height=436'); return false;&quot;>
                                     <img src=&quot;{{url_for('static',filename='images/facebook.png')}}&quot; /></a>
                                     <a href=&quot;#&quot; onclick=&quot;window.open(
-                                    'https://twitter.com/intent/tweet?url='+encodeURIComponent('{{row.link}}'),
+                                    'https://twitter.com/intent/tweet?text='+encodeURIComponent('{{row.title}}\n')+
+                                    '&url='+encodeURIComponent('{{row.link}}'),
                                     'twitter-tweet', 'width=640,height=257');return false;&quot;
                                     class=&quot;twitter-share-button&quot;>
-                                    <img src=&quot;{{url_for('static',filename='images/twitter.png')}}&quot; /></a>">
+                                    <img src=&quot;{{url_for('static',filename='images/twitter.png')}}&quot; /></a>
+                                    <a href=&quot;#&quot; onclick=&quot;window.open(
+                                    'https://plus.google.com/share?url='+encodeURIComponent('{{row.link}}'),
+                                    '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;&quot;>
+                                    <img src=&quot;{{url_for('static',filename='images/gplus.png')}}&quot; /></a>
+                                    ">
                             <img src="{{url_for('static',filename='images/share.png')}}"/></a>
                             <script type="text/javascript">$("#share{{row.id}}").popover();</script>
                         </div>
@@ -212,15 +252,14 @@
                             <img src="{{url_for('static',filename='images/edit.png')}}" /></a></h5>
                         </div>
                         <div>
-                            <a href="#" onclick="del_confirm({{row.id}}); return false;"><img src="{{url_for('static',filename='images/trash.png')}}" /></a>
+                            <a href="#" onclick="del_confirm({{row.id}});return false;"><img src="{{url_for('static',filename='images/trash.png')}}" /></a>
                         </div>
                     </div>
                 </div>
                 {% endfor %}
             </div>
             <div class="span4">
-                <div>
-                    <fb:login-button show-faces="true" width="200" max-rows="1"></fb:login-button>
+                <div id="fb_div">
                 </div>
                 <br />
                 <div>
