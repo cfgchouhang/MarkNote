@@ -59,15 +59,6 @@
             islink = true;
         }
         
-        function check_session(fb_id){
-            if(fb_id !== "unknown"){
-                console.log(fb_id);
-                $.get("https://graph.facebook.com/"+fb_id,{"fields":"name"},function(data){
-                    console.log(data.name);
-                    $("#fb_div").append("<br />"+data.name);
-                });
-            }
-        }
         w.scroll(at_bottom);
     </script>
 </head>
@@ -75,7 +66,7 @@
     <!-- Facebook -->
     <div id="fb-root"></div>
     <script>
-        var fb_access = "{{fb_access}}"
+        var fb_access = "{{fb_access}}";
         window.fbAsyncInit = function() {
             FB.init({
                 appId      : '635660229802178', // App ID
@@ -84,7 +75,7 @@
                 xfbml      : true  // parse XFBML
             });
             
-            check_session(fb_access);
+            /*
 
             FB.Event.subscribe('auth.authResponseChange', function(response) {
                 if(response.status === 'connected') {
@@ -94,26 +85,33 @@
                     FB.login();
                 }
             });
-
+            */
             FB.getLoginStatus(function(response){
+                if(fb_access == "guest"){
+                    $("#fb_div").append('<a class="btn btn-inverse" href="/marknote/auth">sign in facebook</a>');
+                    return;
+                }
+
                 if(response.status === 'connected'){
-                    console.log("login");
-                    //FB.api("/me");
+                    console.log(fb_access);
+                    if(response.authResponse.userID == fb_access){
+                        console.log("login");
+                    }
                     $.post("http://cfg.dyndns.tv:5000/marknote/authenticate",
-                           {"token":response.authResponse.accessToken,"status":"connected",
-                            "fb_id":response.authResponse.userID});
+                           {"status":"connected", "fb_id":response.authResponse.userID});
                 }
                 else if(response.status === 'not_authorized'){
                     console.log("not connect app");
-                    $("#fb_div").append('<fb:login-button width="200" max-rows="1"></fb:login-button>');
-                    $.post("http://cfg.dyndns.tv:5000/marknote/authenticate",
-                           {"token":"not_connected","status":"not_connected","fb_id":"not_connected"});
+                    $("#fb_div").append('<a class="btn btn-inverse" href="/marknote/fb_auth">sign in facebook</a>');
                 }
                 else{
                     console.log("not login");
-                    $("#fb_div").append('<fb:login-button width="200" max-rows="1"></fb:login-button>');
-                    $.post("http://cfg.dyndns.tv:5000/marknote/authenticate",
-                           {"token":"unknown","status":"unknown","fb_id":"unknown"});
+                    $("#fb_div").append('<a class="btn btn-inverse" href="/marknote/fb_auth">sign in facebook</a>');
+                    $.post("http://cfg.dyndns.tv:5000/marknote/authenticate", {"status":"unknown","fb_id":""});
+                }
+
+                if(fb_access != ""){
+                    console.log("has session");
                 }
             });
         };

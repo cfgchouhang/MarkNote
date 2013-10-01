@@ -15,6 +15,7 @@ import urlparse
 import urllib
 import httplib
 
+auth_url = "http://cfg.dyndns.tv:5000/marknote/auth_callback"
 app.secret_key = "As%.~56!dOfj90&/loEio!"
 
 qu = Query()
@@ -40,17 +41,19 @@ def check_desc(page):
 @app.route("/marknote/<orderby>/<int:page>")
 def index(orderby,page):
     data = get_data(orderby,page)
-    fb_access = "unknown"
-    if "fb_access" in session:
-        fb_access = session["fb_id"]
+    access_id = "guest"
+    if "access_id" in session and "login" in session["access_id"]:
+        access_id = session["access_id"]
+
     print(qu.count(MarkNote))
-    
+    print(access_id)
+
     pinterval = page-((page-1)%5)
     return render_template("index.html",data=data,orderby=orderby,
            pinterval=pinterval,page=page,
            current_url=quote_plus(url_for("index",orderby=orderby,
                                   page=page)),
-           fb_access=fb_access)
+           fb_access=access_id)
 
 @app.route("/marknote/add_page")
 def add_page():
@@ -111,31 +114,37 @@ def get_data(orderby="time",page=1):
 
 @app.route("/marknote/authenticate",methods=["POST"])
 def authenticate():
-    token = request.form["token"]
     fb_id = request.form["fb_id"]
     s = request.form["status"]
     response = "not login"
-    print("token: "+token)
     print("fb_id: "+fb_id)
     print("status: "+s)
     if s == "unknown" or s == "not_connected":
         response = "accept: guest"
         status.auth = 2
-        session['fb_access'] = token
-        session['fb_id'] = "unknown"
     elif fb_id == status.topuser:
         response = "accept: top user"
         status.auth = 0
-        session['fb_access'] = token
-        session['fb_id'] = fb_id
+        session["access_id"] += "|||"+fb_id
     else:
         response = "accept: normal user"
         status.auth = 1
-        session['fb_access'] = token
-        session['fb_id'] = fb_id
+        session["access_id"] += "|||"+fb_id
 
     print(response)
-    return response
+
+    return redirect("/marknote/time/1")
+
+@app.route("/marknote/auth")
+def auth():
+    return redirect("https://www.facebook.com/dialog/oauth?\
+                     client_id=635660229802178\
+                     &redirect_uri="+quote_plus(auth_url))
+
+@app.route("/marknote/auth_callback")
+def auth_callback():
+    session["access_id"] = "login"
+    return redirect("marknote/time/1")
 
 @app.context_processor
 def processor():
@@ -166,6 +175,11 @@ def processor():
         #print(dir(profile))
 
     return dict(auth=authenticate, log=log)
+
+@app.route("/marknote/clear_session")
+def clear_session():
+    session.clear()
+    return redirect("/marknote/time/1")
 
 if __name__=='__main__':
     app.debug = True
