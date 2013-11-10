@@ -16,7 +16,7 @@ import urllib
 import httplib
 
 auth_url = "http://cfg.dyndns.tv:5000/marknote/auth_callback"
-app.secret_key = "As%.~56!dOfj90&/loEio!"
+app.secret_key = "As%.~56!dOfj90&/loEi,*Syu#!PrTg7b%"
 
 qu = Query()
 global isdesc
@@ -141,8 +141,27 @@ def auth():
                      client_id=635660229802178\
                      &redirect_uri="+quote_plus(auth_url))
 
-@app.route("/marknote/auth_callback")
+@app.route("/marknote/auth_callback", methods=["GET"])
 def auth_callback():
+    code = request.args.get("code")
+    FACEBOOK_APP_ID     = '635660229802178'
+    FACEBOOK_APP_SECRET = 'ae469dde76158835e337cd739750931b'
+
+    oauth_args = dict(client_id = FACEBOOK_APP_ID,
+                      redirect_uri = "http://cfg.dyndns.tv:5000/marknote/auth_callback",
+                      client_secret = FACEBOOK_APP_SECRET,
+                      code = code)
+    url = 'https://graph.facebook.com/oauth/access_token?'+\
+           urllib.urlencode(oauth_args)
+    f = urllib.urlopen(url)
+    print('aaaaa')
+    print(code)
+    print(f.read())
+
+    #graph = facebook.GraphAPI(oauth_access_token)
+    #profile = graph.get_object("me")
+    #friends = graph.get_connections("me", "friends")
+    #graph.put_object("me", "feed", message="I am writing on my wall!")
     session["access_id"] = "login"
     return redirect("marknote/time/1")
 
@@ -184,5 +203,5 @@ def clear_session():
 if __name__=='__main__':
     app.debug = True
     #app.run(host='127.0.0.1')
-    app.run(host='192.168.1.2')
+    app.run(host='192.168.1.7')
 

@@ -102,11 +102,11 @@
                 }
                 else if(response.status === 'not_authorized'){
                     console.log("not connect app");
-                    $("#fb_div").append('<a class="btn btn-inverse" href="/marknote/fb_auth">sign in facebook</a>');
+                    $("#fb_div").append('<a class="btn btn-inverse" href="/marknote/auth">sign in facebook</a>');
                 }
                 else{
                     console.log("not login");
-                    $("#fb_div").append('<a class="btn btn-inverse" href="/marknote/fb_auth">sign in facebook</a>');
+                    $("#fb_div").append('<a class="btn btn-inverse" href="/marknote/auth">sign in facebook</a>');
                     $.post("http://cfg.dyndns.tv:5000/marknote/authenticate", {"status":"unknown","fb_id":""});
                 }
 
