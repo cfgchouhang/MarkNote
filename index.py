@@ -42,8 +42,10 @@ def check_desc(page):
 def index(orderby,page):
     data = get_data(orderby,page)
     access_id = "guest"
+    name = ""
     if "access_id" in session and "login" in session["access_id"]:
         access_id = session["access_id"]
+        name = session["name"]
 
     print(qu.count(MarkNote))
     print(access_id)
@@ -53,7 +55,7 @@ def index(orderby,page):
            pinterval=pinterval,page=page,
            current_url=quote_plus(url_for("index",orderby=orderby,
                                   page=page)),
-           fb_access=access_id)
+           fb_access=access_id,name=name)
 
 @app.route("/marknote/add_page")
 def add_page():
@@ -154,14 +156,13 @@ def auth_callback():
     url = 'https://graph.facebook.com/oauth/access_token?'+\
            urllib.urlencode(oauth_args)
     f = urllib.urlopen(url)
-    print('aaaaa')
-    print(code)
-    print(f.read())
-
-    #graph = facebook.GraphAPI(oauth_access_token)
-    #profile = graph.get_object("me")
+    token = f.read()
+    token = token[token.find('=')+1:token.find('&')]
+    graph = facebook.GraphAPI(token)
+    profile = graph.get_object("me")
+    print(profile["name"])
     #friends = graph.get_connections("me", "friends")
-    #graph.put_object("me", "feed", message="I am writing on my wall!")
+    session["name"] = profile["name"]
     session["access_id"] = "login"
     return redirect("marknote/time/1")
 
@@ -202,6 +203,5 @@ def clear_session():
 
 if __name__=='__main__':
     app.debug = True
-    #app.run(host='127.0.0.1')
-    app.run(host='192.168.1.7')
+    app.run(host='192.168.1.2')
 

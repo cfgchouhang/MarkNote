@@ -141,6 +141,11 @@
     <div class="page-header" id="pageheader">
             <h1>Simple bookmark and keynote</h1>
     </div>
+    <div id="fb_div">
+                    {% if name != "" %}
+                        <h2>{{ name }}</h2>
+                    {% endif %}
+    </div>
     <div class="container-fluid">
         <div class="row" id="main">
             <div class="span2">
@@ -258,6 +263,9 @@
             </div>
             <div class="span4">
                 <div id="fb_div">
+                    {% if name != "" %}
+                        <h2>{{ name }}</h2>
+                    {% endif %}
                 </div>
                 <br />
                 <div>
