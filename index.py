@@ -41,32 +41,32 @@ def check_desc(page):
 @app.route("/marknote/<orderby>/<int:page>")
 def index(orderby,page):
     data = get_data(orderby,page)
-    access_id = "guest"
-    name = ""
-    if "access_id" in session and "login" in session["access_id"]:
-        access_id = session["access_id"]
-        name = session["name"]
+    user_id = -1
+    user_name = "guest"
+    if "user_id" in session:
+        user_id = session["user_id"]
+        user_name = session["user_name"]
 
     print(qu.count(MarkNote))
-    print(access_id)
+    print(user_id, user_name)
 
     pinterval = page-((page-1)%5)
     return render_template("index.html",data=data,orderby=orderby,
            pinterval=pinterval,page=page,
            current_url=quote_plus(url_for("index",orderby=orderby,
                                   page=page)),
-           fb_access=access_id,name=name)
+           id=user_id,name=user_name)
 
 @app.route("/marknote/add_page")
 def add_page():
-    if status.auth == 2:
-        return redirect("/marknote/time/1")
+    #if status.auth == 2:
+    #    return redirect("/marknote/time/1")
     return render_template("add_page.html")
 
 @app.route("/marknote/edit_page/<int:id>")
 def edit_page(id):
-    if status.auth == 2:
-        return redirect("/marknote/time/1")
+    #if status.auth == 2:
+    #    return redirect("/marknote/time/1")
     data = qu.query_byid(MarkNote,id).first()
     print(data)
     return render_template("edit_page.html",data=data)
@@ -113,7 +113,7 @@ def get_data(orderby="time",page=1):
         isdesc = True
         order = desc(MarkNote.time)
     return qu.query(MarkNote,order,num=10,offset=(page-1)*10)
-
+'''
 @app.route("/marknote/authenticate",methods=["POST"])
 def authenticate():
     fb_id = request.form["fb_id"]
@@ -136,7 +136,7 @@ def authenticate():
     print(response)
 
     return redirect("/marknote/time/1")
-
+'''
 @app.route("/marknote/auth")
 def auth():
     return redirect("https://www.facebook.com/dialog/oauth?\
@@ -162,8 +162,8 @@ def auth_callback():
     profile = graph.get_object("me")
     print(profile["name"])
     #friends = graph.get_connections("me", "friends")
-    session["name"] = profile["name"]
-    session["access_id"] = "login"
+    session["user_name"] = profile["name"]
+    session["user_id"] = profile["id"]
     return redirect("marknote/time/1")
 
 @app.context_processor
