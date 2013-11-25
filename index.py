@@ -46,7 +46,8 @@ def index(orderby,page):
     if "user_id" in session:
         user_id = session["user_id"]
         user_name = session["user_name"]
-
+    else:
+        status.auth = 2
     print(qu.count(MarkNote))
     print(user_id, user_name)
 
@@ -59,14 +60,14 @@ def index(orderby,page):
 
 @app.route("/marknote/add_page")
 def add_page():
-    #if status.auth == 2:
-    #    return redirect("/marknote/time/1")
+    if status.auth == 2:
+        return redirect("/marknote/time/1")
     return render_template("add_page.html")
 
 @app.route("/marknote/edit_page/<int:id>")
 def edit_page(id):
-    #if status.auth == 2:
-    #    return redirect("/marknote/time/1")
+    if status.auth == 2:
+        return redirect("/marknote/time/1")
     data = qu.query_byid(MarkNote,id).first()
     print(data)
     return render_template("edit_page.html",data=data)
@@ -164,6 +165,10 @@ def auth_callback():
     #friends = graph.get_connections("me", "friends")
     session["user_name"] = profile["name"]
     session["user_id"] = profile["id"]
+    if session["user_id"] == status.topuser:
+        status.auth = 0
+    else:
+        status.auth = 1
     return redirect("marknote/time/1")
 
 @app.context_processor

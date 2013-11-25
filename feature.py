@@ -133,8 +133,8 @@ def search():
 
 @app.route("/marknote/delete/<int:id>",methods=["GET"])
 def delete(id):
-    #if status.auth == 0:
-    qu.delete(id)
+    if status.auth == 0:
+        qu.delete(id)
     next_url = request.args.get("next")
     return redirect(next_url)
 
@@ -172,6 +172,8 @@ def export_db():
 
 @app.route("/marknote/import")
 def import_db():
+    if status.auth != 0:
+        return redirect("/marknote/time/1")
     count = 0
     data = {}
     for line in open("notedata/exportdb",'r'):
